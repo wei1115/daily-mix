@@ -2,15 +2,10 @@
 __pycache__/
 *.pyc
 
-# 隧道工具（体积大，不要进仓库）
-tunnel/cloudflared.exe
-tunnel/vendor/
-tunnel/tmp/
-
-# 本机凭据与备份
-access.txt
+# 本机备份（注册表原值等）
 backup/
 
 # 临时文件
 _pw_*.txt
+_*.py
 *.log
