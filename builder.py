@@ -146,7 +146,6 @@ def build(progress=None, force: bool = False, day: str | None = None) -> dict:
             "genre": c.genre,
             "artwork": c.artwork,
             "netease_url": c.netease_url,
-            "qq_url": c.qq_url,
             "score": round(c.score, 2),
         } for c in selected]
 
