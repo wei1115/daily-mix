@@ -102,7 +102,6 @@ def _pack_track(r: dict) -> dict:
         "artwork": upscale_artwork(r.get("artworkUrl100") or ""),
         "genre": r.get("primaryGenreName") or "",
         "released": (r.get("releaseDate") or "")[:10],
-        "store_url": r.get("trackViewUrl") or "",
     }
 
 
@@ -210,15 +209,6 @@ def netease_link(artist: str, title: str) -> str:
     return netease_lookup(artist, title).get("url", "")
 
 
-def qq_lookup(artist: str, title: str) -> dict:
-    """Deprecated: QQ Music support was removed. Kept so old imports fail softly."""
-    return {"url": "", "albummid": ""}
-
-
-def qq_link(artist: str, title: str) -> str:
-    return ""
-
-
 # ---------------------------------------------------------------------------
 # Public entry point
 # ---------------------------------------------------------------------------
@@ -247,7 +237,6 @@ def enrich(candidate, progress=None) -> bool:
 
     ne = netease_lookup(candidate.artist, candidate.title)
     candidate.netease_url = ne.get("url", "")
-    candidate.qq_url = ""
     if not candidate.artwork and ne.get("cover"):
         candidate.artwork = ne["cover"]
     if progress:
