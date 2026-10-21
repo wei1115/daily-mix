@@ -228,9 +228,12 @@ class Handler(BaseHTTPRequestHandler):
 
         if route.startswith("/web/"):
             rel = os.path.normpath(route[len("/web/"):]).replace("\\", "/")
-            if rel.startswith("..") or rel.startswith("/"):
+            if rel.startswith("..") or rel.startswith("/") or "\x00" in rel:
                 return self._json({"error": "bad path"}, 400)
-            return self._file(os.path.join(WEB, rel))
+            full = os.path.realpath(os.path.join(WEB, rel))
+            if not full.startswith(os.path.realpath(WEB) + os.sep):
+                return self._json({"error": "bad path"}, 400)
+            return self._file(full)
 
         if route == "/favicon.ico":
             self.send_response(204)
@@ -244,6 +247,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._reject()
         parsed = urllib.parse.urlparse(self.path)
         length = int(self.headers.get("Content-Length") or 0)
+        if length > 1_000_000:
+            return self._json({"error": "body too large"}, 413)
         raw = self.rfile.read(length) if length else b""
 
         if parsed.path == "/api/refresh":
