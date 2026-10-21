@@ -93,7 +93,6 @@ def track_row(index: int, track: dict) -> str:
           <div class="t-sub">{escape(track.get("artist", ""))}{album}</div>
         </div>
         <div class="t-side">
-          <span class="tag {escape(track.get('source', ''))}">{escape(SOURCE_NAMES.get(track.get('source', ''), track.get('source', '')))}</span>
           <div class="row-actions">{cloud}{web}</div>
         </div>
       </li>"""
