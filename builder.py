@@ -12,9 +12,9 @@ import enrich
 import sources
 import store
 
-TARGET = 18
-MAX_ATTEMPTS = 80
-SOURCE_CAPS = {"kexp": 9, "pitchfork": 4, "allmusic": 4, "radioparadise": 4}
+TARGET = 25
+MAX_ATTEMPTS = 110
+SOURCE_CAPS = {"kexp": 12, "pitchfork": 5, "allmusic": 5, "radioparadise": 5}
 GENRE_CAP = 4
 LOOKBACK_DAYS = 14
 ALBUM_LOOKBACK_DAYS = 7
