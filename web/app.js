@@ -253,9 +253,6 @@
       main.append(sub);
 
       const side = el("div", "t-side");
-      const tag = el("span", `tag ${track.source}`, SOURCE_NAMES[track.source] || track.source);
-      tag.title = track.context || "";
-      side.append(tag);
 
       const actions = el("div", "row-actions");
       const ne = el("button", "icon-btn", "云");
