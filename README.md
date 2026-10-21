@@ -98,7 +98,6 @@ reg delete "HKCU\Software\Classes\orpheus" /f
 dailymix/
 ├─ 启动.bat            双击启动
 ├─ 停止.bat            停止后台实例
-├─ 开启隧道.bat         临时公网地址 + 二维码
 ├─ 开机自启.vbs         静默启动脚本（需自行放到 shell:startup）
 ├─ app.py              入口：起服务、开浏览器
 ├─ server.py           路由 / 静态资源 / 后台生成任务
