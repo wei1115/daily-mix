@@ -4,12 +4,10 @@ from __future__ import annotations
 
 import base64
 import ctypes
-import hmac
 import json
 import mimetypes
 import os
 import re
-import subprocess
 import threading
 import traceback
 import urllib.parse
@@ -18,9 +16,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import store
 
-ACCESS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "access.txt")
 NETEASE_DEFAULT = r"D:\网易云音乐\CloudMusic\cloudmusic.exe"
-_access_cache = {"mtime": 0.0, "value": ""}
 
 
 def netease_exe() -> str:
@@ -41,21 +37,6 @@ def netease_exe() -> str:
             return path
     return ""
 
-
-def _access_credentials() -> str:
-    """Read 'user:password' from access.txt, cached by mtime."""
-    try:
-        mtime = os.path.getmtime(ACCESS_FILE)
-    except OSError:
-        return ""
-    if mtime != _access_cache["mtime"]:
-        try:
-            with open(ACCESS_FILE, encoding="utf-8") as fh:
-                _access_cache["value"] = fh.read().strip()
-        except OSError:
-            _access_cache["value"] = ""
-        _access_cache["mtime"] = mtime
-    return _access_cache["value"]
 
 mimetypes.add_type("application/javascript", ".js")
 mimetypes.add_type("image/svg+xml", ".svg")
@@ -150,33 +131,8 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    # -- auth ------------------------------------------------------------
-    def _auth_ok(self) -> bool:
-        """Only requests that came through the Cloudflare tunnel need a password."""
-        if not self.headers.get("Cf-Ray"):
-            return True
-        creds = _access_credentials()
-        if not creds:
-            return False
-        header = self.headers.get("Authorization", "")
-        if not header.startswith("Basic "):
-            return False
-        try:
-            given = base64.b64decode(header[6:]).decode("utf-8")
-        except Exception:  # noqa: BLE001
-            return False
-        return hmac.compare_digest(given, creds)
-
-    def _reject(self):
-        self.send_response(401)
-        self.send_header("WWW-Authenticate", 'Basic realm="Daily Mix", charset="UTF-8"')
-        self.send_header("Content-Length", "0")
-        self.end_headers()
-
     # -- routes ----------------------------------------------------------
     def do_GET(self):
-        if not self._auth_ok():
-            return self._reject()
         parsed = urllib.parse.urlparse(self.path)
         route = parsed.path
         query = urllib.parse.parse_qs(parsed.query)
@@ -243,8 +199,6 @@ class Handler(BaseHTTPRequestHandler):
         return self._json({"error": "not found"}, 404)
 
     def do_POST(self):
-        if not self._auth_ok():
-            return self._reject()
         parsed = urllib.parse.urlparse(self.path)
         length = int(self.headers.get("Content-Length") or 0)
         if length > 1_000_000:
