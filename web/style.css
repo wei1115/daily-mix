@@ -24,7 +24,7 @@ body{
   font-size:15px;
   line-height:1.55;
   -webkit-font-smoothing:antialiased;
-  padding-bottom:104px;
+  padding-bottom:0;
   min-height:100vh;
 }
 .bg-glow{
@@ -273,6 +273,30 @@ main{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:36px 40p
 }
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .chip.disabled{opacity:.3;pointer-events:none}
+
+/* ---------- 左右两列各自独立滚动（仅桌面） ---------- */
+@media (min-width:1081px){
+  html,body{height:100%;overflow:hidden}
+  body{display:flex;flex-direction:column}
+  .topbar{flex:0 0 auto}
+  main{flex:1 1 auto;min-height:0;overflow:hidden;width:100%;padding-bottom:28px}
+  .layout{height:100%;min-height:0;align-items:stretch}
+  .col-main{
+    height:100%;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+    padding-right:14px;scrollbar-width:thin;
+    scrollbar-color:rgba(255,255,255,.16) transparent;
+  }
+  .col-side{
+    position:static;height:100%;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+    padding-right:6px;scrollbar-width:thin;
+    scrollbar-color:rgba(255,255,255,.16) transparent;
+  }
+  .col-main::-webkit-scrollbar,.col-side::-webkit-scrollbar{width:6px}
+  .col-main::-webkit-scrollbar-thumb,.col-side::-webkit-scrollbar-thumb{
+    background:rgba(255,255,255,.16);border-radius:3px;
+  }
+  .col-main::-webkit-scrollbar-track,.col-side::-webkit-scrollbar-track{background:transparent}
+}
 
 /* ---------- responsive ---------- */
 @media (max-width:1080px){
