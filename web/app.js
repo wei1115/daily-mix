@@ -1,4 +1,4 @@
-/* 每日混音 — frontend (no preview playback) */
+/* 每日混音 — frontend */
 (() => {
   "use strict";
 
@@ -291,15 +291,15 @@
   function renderPick(track, initial = true) {
     $("pickLabel").textContent = initial ? "今日主打" : "正在查看";
     const img = $("pickImg");
-    const initial = $("pickInitial");
+    const initialEl = $("pickInitial");
     img.style.display = track.artwork ? "block" : "none";
-    initial.style.display = track.artwork ? "none" : "flex";
-    initial.textContent = (track.artist || "?").trim().charAt(0).toUpperCase();
+    initialEl.style.display = track.artwork ? "none" : "flex";
+    initialEl.textContent = (track.artist || "?").trim().charAt(0).toUpperCase();
     const hue = hueFor(track.artist || "x");
-    initial.style.background = `linear-gradient(135deg, hsl(${hue} 45% 58%), hsl(${(hue + 40) % 360} 40% 40%))`;
+    initialEl.style.background = `linear-gradient(135deg, hsl(${hue} 45% 58%), hsl(${(hue + 40) % 360} 40% 40%))`;
     img.onerror = () => {
       img.style.display = "none";
-      initial.style.display = "flex";
+      initialEl.style.display = "flex";
     };
     if (track.artwork) img.src = track.artwork;
 
