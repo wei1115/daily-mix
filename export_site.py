@@ -84,8 +84,18 @@ def track_row(index: int, track: dict) -> str:
     web = (f'<a class="icon-btn" href="{escape(track.get("netease_url", ""))}" '
            f'target="_blank" rel="noopener" title="打开网页版">网</a>' if track.get("netease_url") else "")
     album = f'<span class="dot">·</span>{escape(track.get("album", ""))}' if track.get("album") else ""
+    source_name = SOURCE_NAMES.get(track.get("source", ""), track.get("source", ""))
+    selected = " selected" if index == 1 else ""
+    data = (f'data-artist="{escape(track.get("artist", ""))}" '
+            f'data-album="{escape(track.get("album", ""))}" '
+            f'data-context="{escape(track.get("context", ""))}" '
+            f'data-artwork="{escape(art)}" '
+            f'data-orpheus="{escape(orpheus_url(sid)) if sid else ""}" '
+            f'data-web="{escape(track.get("netease_url", ""))}" '
+            f'data-source-url="{escape(track.get("source_url", ""))}" '
+            f'data-source-name="{escape(source_name)}"')
     return f"""
-      <li class="track">
+      <li class="track{selected}" {data}>
         <div class="idx"><span class="num">{index:02d}</span></div>
         <div class="cover-wrap">{cover}</div>
         <div class="t-main">
@@ -147,7 +157,9 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
   .row-actions{{opacity:1;transform:none}}
   .source-list a{{color:var(--text);text-decoration:none}}
   .source-list a:hover{{color:var(--accent)}}
-  .track{{cursor:default}}
+  .track{{cursor:pointer}}
+  .track.selected{{background:rgba(255,255,255,.055)}}
+  .track.selected .t-title{{color:var(--accent)}}
 </style>
 </head>
 <body>
@@ -174,13 +186,16 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
 
     <aside class="col-side">
       <div class="card pick-card">
-        <p class="card-label">今日主打</p>
-        <div class="pick-cover">{hero_img}</div>
-        <h2 class="pick-artist">{escape(hero.get("artist", ""))}</h2>
-        <p class="pick-album">{escape(hero.get("album", ""))}</p>
-        <p class="pick-context">{escape(hero.get("context", ""))}</p>
-        <div class="pick-actions">{hero_cloud}{hero_web}</div>
-        <a class="source-link" href="{escape(hero.get("source_url", "#"))}" target="_blank" rel="noopener">→ 查看原文</a>
+        <p class="card-label" id="pickLabel">今日主打</p>
+        <div class="pick-cover"><img id="pickImg" src="{escape(hero_cover)}" alt="" referrerpolicy="no-referrer"></div>
+        <h2 class="pick-artist" id="pickArtist">{escape(hero.get("artist", ""))}</h2>
+        <p class="pick-album" id="pickAlbum">{escape(hero.get("album", ""))}</p>
+        <p class="pick-context" id="pickContext">{escape(hero.get("context", ""))}</p>
+        <div class="pick-actions">
+          <a class="chip" id="pickNetease" href="{escape(orpheus_url(hero_sid)) if hero_sid else '#'}">在客户端播放</a>
+          <a class="chip" id="pickWeb" href="{escape(hero.get("netease_url", "")) if hero.get("netease_url") else '#'}" target="_blank" rel="noopener">网页版</a>
+        </div>
+        <a class="source-link" id="pickSource" href="{escape(hero.get("source_url", "#"))}" target="_blank" rel="noopener">→ 查看原文</a>
       </div>
 
       <div class="card">
@@ -196,6 +211,62 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
     </aside>
   </section>
 </main>
+
+<script>
+(function () {{
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.track'));
+  var pick = {{
+    label: document.getElementById('pickLabel'),
+    img: document.getElementById('pickImg'),
+    artist: document.getElementById('pickArtist'),
+    album: document.getElementById('pickAlbum'),
+    context: document.getElementById('pickContext'),
+    netease: document.getElementById('pickNetease'),
+    web: document.getElementById('pickWeb'),
+    source: document.getElementById('pickSource')
+  }};
+  function select(row) {{
+    rows.forEach(function (r) {{ r.classList.remove('selected'); }});
+    row.classList.add('selected');
+    pick.label.textContent = '正在查看';
+    var art = row.dataset.artwork || '';
+    if (art) {{
+      pick.img.src = art;
+      pick.img.style.display = 'block';
+    }} else {{
+      pick.img.removeAttribute('src');
+      pick.img.style.display = 'none';
+    }}
+    pick.artist.textContent = row.dataset.artist || '';
+    pick.album.textContent = row.dataset.album || '';
+    pick.context.textContent = row.dataset.context || '';
+    if (row.dataset.orpheus) {{
+      pick.netease.href = row.dataset.orpheus;
+      pick.netease.classList.remove('disabled');
+    }} else {{
+      pick.netease.href = '#';
+      pick.netease.classList.add('disabled');
+    }}
+    if (row.dataset.web) {{
+      pick.web.href = row.dataset.web;
+      pick.web.classList.remove('disabled');
+    }} else {{
+      pick.web.href = '#';
+      pick.web.classList.add('disabled');
+    }}
+    pick.source.href = row.dataset.sourceUrl || '#';
+    pick.source.textContent = row.dataset.sourceName
+      ? '→ 查看 ' + row.dataset.sourceName + ' 原文'
+      : '→ 查看原文';
+  }}
+  rows.forEach(function (row) {{
+    row.addEventListener('click', function (ev) {{
+      if (ev.target.closest('a')) return;
+      select(row);
+    }});
+  }});
+}})();
+</script>
 </body>
 </html>
 """
