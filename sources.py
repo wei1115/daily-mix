@@ -74,12 +74,9 @@ class Candidate:
     rotation: str = ""
     score: float = 0.0
     artwork: str = ""
-    preview: str = ""
     netease_url: str = ""
-    qq_url: str = ""
     genre: str = ""
     kind: str = "track"          # "track" (ready) or "album" (needs resolving)
-    track_count: int = 0
 
 
 def _iso_date(value: str) -> str:
