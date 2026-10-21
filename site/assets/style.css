@@ -103,6 +103,8 @@ main{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:36px 40p
   cursor:pointer;
 }
 .track:hover{background:rgba(255,255,255,.035)}
+.track.selected{background:rgba(255,255,255,.055)}
+.track.selected .t-title{color:var(--accent)}
 .track.playing{background:var(--accent-soft)}
 .track.playing .t-title{color:var(--accent)}
 .track .idx{

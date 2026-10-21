@@ -10,7 +10,9 @@
   .row-actions{opacity:1;transform:none}
   .source-list a{color:var(--text);text-decoration:none}
   .source-list a:hover{color:var(--accent)}
-  .track{cursor:default}
+  .track{cursor:pointer}
+  .track.selected{background:rgba(255,255,255,.055)}
+  .track.selected .t-title{color:var(--accent)}
 </style>
 </head>
 <body>
@@ -33,292 +35,295 @@
         <span class="mono">25 首 / 2 个来源</span>
       </div>
       <ol class="track-list">
-      <li class="track">
+      <li class="track selected" data-artist="Wishy" data-album="Nature’s Pill" data-context="KEXP 播出 · 10-21 15:49" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/92/a4/18/92a41855-1f9c-88c4-e646-438bf88af382/65809.jpg/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMzM3ODE1MzU1MSIsImNtZCI6InBsYXkifQ==" data-web="https://music.163.com/song?id=3378153551" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">01</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/ad/88/17/ad881758-6be5-8d3a-b1ff-e677b082acf3/607618024529.png/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/92/a4/18/92a41855-1f9c-88c4-e646-438bf88af382/65809.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">P.S.</div>
-          <div class="t-sub">Film School<span class="dot">·</span>Alwaysnever</div>
+          <div class="t-title">Lovesick</div>
+          <div class="t-sub">Wishy<span class="dot">·</span>Nature’s Pill</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTc3OTg1NjEiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=17798561" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMzM3ODE1MzU1MSIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=3378153551" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="The Raveonettes" data-album="I Wanna Be Adored" data-context="KEXP 播出 · 10-21 08:31" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music4/v4/45/1e/de/451edefc-b923-fcc7-9d8b-0c9d6bd3fcbc/888003904422.jpg/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjgxMzc0NjUiLCJjbWQiOiJwbGF5In0=" data-web="https://music.163.com/song?id=28137465" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">02</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/66/01/f6/6601f673-d6b6-ebd2-5cf4-f71d9dc82ce6/0091131197035.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music4/v4/45/1e/de/451edefc-b923-fcc7-9d8b-0c9d6bd3fcbc/888003904422.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">I Wanna Be Your Dog</div>
-          <div class="t-sub">Iggy Pop<span class="dot">·</span>…The Beat of the Living Dead… Live in Europe 1993</div>
+          <div class="t-title">I Wanna Be Adored</div>
+          <div class="t-sub">The Raveonettes<span class="dot">·</span>I Wanna Be Adored</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjcwMjYwODQiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=27026084" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjgxMzc0NjUiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=28137465" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Wanda Jackson" data-album="Heart Trouble" data-context="KEXP 播出 · 10-21 08:56" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/5e/59/7e/5e597e6d-1265-c202-5420-92fd1011dbae/21UMGIM04488.rgb.jpg/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTk2NDE3MjMzMiIsImNtZCI6InBsYXkifQ==" data-web="https://music.163.com/song?id=1964172332" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">03</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/c6/69/6d/c6696d19-82ed-a7ff-86bd-8ce97b021dbb/00731454699822.rgb.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/5e/59/7e/5e597e6d-1265-c202-5420-92fd1011dbae/21UMGIM04488.rgb.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Aqua Boogie (A Psychoalphadiscobetabioaquadoloop)</div>
-          <div class="t-sub">Parliament<span class="dot">·</span>Tear the Roof Off: 1974-1980</div>
+          <div class="t-title">Let&#x27;s Have a Party</div>
+          <div class="t-sub">Wanda Jackson<span class="dot">·</span>Heart Trouble</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjY3NTQwNDEiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=26754041" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTk2NDE3MjMzMiIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=1964172332" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Dirty Beaches" data-album="Xiu Xiu / Dirty Beaches" data-context="KEXP 播出 · 10-21 10:28" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/de/98/1c/de981cea-db2c-8d8b-e635-59a41a2f6d07/644110913692.png/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjY3ODMzNzgiLCJjbWQiOiJwbGF5In0=" data-web="https://music.163.com/song?id=26783378" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">04</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/b5/3a/18/b53a18a0-2438-547f-71eb-4d1ce8262085/5400863143800_cover.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/de/98/1c/de981cea-db2c-8d8b-e635-59a41a2f6d07/644110913692.png/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Bela Lugosi&#x27;s Dead</div>
-          <div class="t-sub">Nouvelle Vague<span class="dot">·</span>Bande à part</div>
+          <div class="t-title">Tu ne dis rien</div>
+          <div class="t-sub">Dirty Beaches<span class="dot">·</span>Xiu Xiu / Dirty Beaches</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTc4OTMwOSIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=1789309" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjY3ODMzNzgiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=26783378" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Quincy Jones" data-album="Cocktail Mix, Volume 2: Martini Madness" data-context="KEXP 播出 · 10-21 08:58" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/13/b5/02/13b50218-9f54-1bef-b10f-624ec45437f2/06UMGIM16561.rgb.jpg/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiNTA5NTQzMzE0IiwiY21kIjoicGxheSJ9" data-web="https://music.163.com/song?id=509543314" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">05</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/d4/cf/ab/d4cfabe3-c091-a394-84dd-9aaf3ba74837/06UMGIM18756.rgb.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/13/b5/02/13b50218-9f54-1bef-b10f-624ec45437f2/06UMGIM16561.rgb.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">I Know You, Part III</div>
-          <div class="t-sub">Morphine<span class="dot">·</span>Like Swimming</div>
+          <div class="t-title">Soul Bossa Nova</div>
+          <div class="t-sub">Quincy Jones<span class="dot">·</span>Cocktail Mix, Volume 2: Martini Madness</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><span class="icon-btn disabled" title="没有匹配到网易云">云</span></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiNTA5NTQzMzE0IiwiY21kIjoicGxheSJ9" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=509543314" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Radical Face" data-album="Ghost" data-context="Radio Paradise · Mellow频道正在播" data-artwork="https://img.radioparadise.com/covers/l/11736.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTg0OTU0MzYiLCJjbWQiOiJwbGF5In0=" data-web="https://music.163.com/song?id=18495436" data-source-url="https://radioparadise.com/" data-source-name="Radio Paradise">
         <div class="idx"><span class="num">06</span></div>
-        <div class="cover-wrap"><img src="https://img.radioparadise.com/covers/l/13302.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://img.radioparadise.com/covers/l/11736.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Think You Can Wait</div>
-          <div class="t-sub">The National<span class="dot">·</span>Think You Can Wait (from the film &quot;Win Win&quot;)</div>
+          <div class="t-title">Welcome Home</div>
+          <div class="t-sub">Radical Face<span class="dot">·</span>Ghost</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiODY2MTQ2OTY3IiwiY21kIjoicGxheSJ9" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=866146967" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTg0OTU0MzYiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=18495436" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Khun Narin" data-album="Khun Narin&#x27;s Electric Phin Band" data-context="Radio Paradise · Global频道正在播" data-artwork="https://img.radioparadise.com/covers/l/26799.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjkwMDM1ODMiLCJjbWQiOiJwbGF5In0=" data-web="https://music.163.com/song?id=29003583" data-source-url="https://radioparadise.com/" data-source-name="Radio Paradise">
         <div class="idx"><span class="num">07</span></div>
-        <div class="cover-wrap"><img src="https://img.radioparadise.com/covers/l/26534.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://img.radioparadise.com/covers/l/26799.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Assossamagh</div>
-          <div class="t-sub">Imarhan<span class="dot">·</span>Imarhan</div>
+          <div class="t-title">Lam Phu Thai #1</div>
+          <div class="t-sub">Khun Narin<span class="dot">·</span>Khun Narin&#x27;s Electric Phin Band</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiNDEzNzQwMzkwIiwiY21kIjoicGxheSJ9" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=413740390" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjkwMDM1ODMiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=29003583" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="De La Soul" data-album="3 Feet High and Rising" data-context="KEXP 播出 · 10-21 08:52" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/a8/d7/21/a8d72124-208c-c85c-b72e-a6c7cd54aed4/810098502627.png/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjAwMzIyNTE4NSIsImNtZCI6InBsYXkifQ==" data-web="https://music.163.com/song?id=2003225185" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">08</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/56/a7/64/56a7645d-4a05-f470-8fcd-5d9d68b7189d/886448877554.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/a8/d7/21/a8d72124-208c-c85c-b72e-a6c7cd54aed4/810098502627.png/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">1999</div>
-          <div class="t-sub">Prince<span class="dot">·</span>The Hits/The B-Sides</div>
+          <div class="t-title">The Magic Number</div>
+          <div class="t-sub">De La Soul<span class="dot">·</span>3 Feet High and Rising</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjEzOTMyMTgiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=21393218" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjAwMzIyNTE4NSIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=2003225185" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="CHAI" data-album="WINK" data-context="KEXP 播出 · 10-21 08:39" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/29/77/30/29773040-3b26-8e50-e376-22c850cc1858/098787142068.png/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTgyMDk2NjQ5OCIsImNtZCI6InBsYXkifQ==" data-web="https://music.163.com/song?id=1820966498" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">09</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/d1/6c/30/d16c300f-c26c-89f1-9207-23b71c5e6584/5056556135845_cover.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/29/77/30/29773040-3b26-8e50-e376-22c850cc1858/098787142068.png/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Generator</div>
-          <div class="t-sub">Justice<span class="dot">·</span>Hyperdrama</div>
+          <div class="t-title">Nobody Knows We Are Fun</div>
+          <div class="t-sub">CHAI<span class="dot">·</span>WINK</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjE0OTM1Mzk4NSIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=2149353985" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTgyMDk2NjQ5OCIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=1820966498" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Diary" data-album="Spiral Bound" data-context="KEXP 播出 · 10-21 15:45" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/fb/15/2c/fb152cca-8eaf-bfad-b2d3-2ddc5d4007a9/66226.jpg/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMzM4Mzc4MTQ2MSIsImNtZCI6InBsYXkifQ==" data-web="https://music.163.com/song?id=3383781461" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">10</span></div>
-        <div class="cover-wrap"><div class="cover-fallback" style="background:hsl(110 40% 45%)">A</div></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/fb/15/2c/fb152cca-8eaf-bfad-b2d3-2ddc5d4007a9/66226.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Tango Japan</div>
-          <div class="t-sub">Al Onzo</div>
+          <div class="t-title">Keep Comin&#x27; Up</div>
+          <div class="t-sub">Diary<span class="dot">·</span>Spiral Bound</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><span class="icon-btn disabled" title="没有匹配到网易云">云</span></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMzM4Mzc4MTQ2MSIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=3383781461" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Portishead" data-album="Roseland NYC Live" data-context="KEXP 播出 · 10-21 10:46" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/cb/07/1f/cb071fa3-27b0-78af-7ac6-dbe8fc98bf65/00731455942422.rgb.jpg/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTgzMjY1MzciLCJjbWQiOiJwbGF5In0=" data-web="https://music.163.com/song?id=18326537" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">11</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/22/6e/c0/226ec03e-c8b3-431d-8089-35d34a14ed83/98495.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/cb/07/1f/cb071fa3-27b0-78af-7ac6-dbe8fc98bf65/00731455942422.rgb.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Strawberry Season</div>
-          <div class="t-sub">The Bug Club<span class="dot">·</span>Rare Birds: Hour of Song</div>
+          <div class="t-title">Humming</div>
+          <div class="t-sub">Portishead<span class="dot">·</span>Roseland NYC Live</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjYyMTE2MjYwOCIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=2621162608" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTgzMjY1MzciLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=18326537" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Radiohead" data-album="Kid A" data-context="KEXP 播出 · 10-21 10:03" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/bd/8e/13/bd8e1358-b367-a689-cb84-cebd0b067dc4/634904078263.png/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjI1NTkwNDEiLCJjbWQiOiJwbGF5In0=" data-web="https://music.163.com/song?id=22559041" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">12</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/c1/ec/2b/c1ec2bb0-b5e9-8d88-a474-9aa0dbd2dae5/5400863217402.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/bd/8e/13/bd8e1358-b367-a689-cb84-cebd0b067dc4/634904078263.png/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Ice Pick, Kalamazoo</div>
-          <div class="t-sub">Liars<span class="dot">·</span>A Ban on Plastic Bag Bans</div>
+          <div class="t-title">Idioteque</div>
+          <div class="t-sub">Radiohead<span class="dot">·</span>Kid A</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMzQzMzIxODk1MiIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=3433218952" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjI1NTkwNDEiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=22559041" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Lambrini Girls" data-album="No Refunds" data-context="KEXP 播出 · 10-21 09:40" data-artwork="https://p2.music.126.net/CG4ZSv7ZPd1LpjvciFkTfA==/109951174141897834.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMzQ0OTY5ODgwNSIsImNtZCI6InBsYXkifQ==" data-web="https://music.163.com/song?id=3449698805" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">13</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/5c/23/a5/5c23a5df-f1b0-622e-3f19-320b3cb5207d/886449762606.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://p2.music.126.net/CG4ZSv7ZPd1LpjvciFkTfA==/109951174141897834.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">You Want It Darker</div>
-          <div class="t-sub">Leonard Cohen<span class="dot">·</span>You Want It Darker</div>
+          <div class="t-title">The Basement</div>
+          <div class="t-sub">Lambrini Girls<span class="dot">·</span>No Refunds</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiNDM2NDg3MDcxIiwiY21kIjoicGxheSJ9" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=436487071" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMzQ0OTY5ODgwNSIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=3449698805" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Nine Inch Nails" data-album="Pretty Hate Machine" data-context="KEXP 播出 · 10-21 09:44" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/ca/12/6a/ca126ae1-0019-7c93-c5d4-6fbd49230e6b/14CMGIM00979.rgb.jpg/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTc4OTAxMCIsImNtZCI6InBsYXkifQ==" data-web="https://music.163.com/song?id=1789010" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">14</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/18/a8/b7/18a8b7ed-365d-ef37-d724-88ce764c3ee7/886445635911.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/ca/12/6a/ca126ae1-0019-7c93-c5d4-6fbd49230e6b/14CMGIM00979.rgb.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">One of These Days</div>
-          <div class="t-sub">Pink Floyd<span class="dot">·</span>Meddle</div>
+          <div class="t-title">Terrible Lie</div>
+          <div class="t-sub">Nine Inch Nails<span class="dot">·</span>Pretty Hate Machine</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMzMzOTQwNTUiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=33394055" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTc4OTAxMCIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=1789010" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Paul Simon" data-album="The Rhythm of the Saints" data-context="Radio Paradise · 主混音频道正在播" data-artwork="https://img.radioparadise.com/covers/l/12087.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTgwMzE4MzUiLCJjbWQiOiJwbGF5In0=" data-web="https://music.163.com/song?id=18031835" data-source-url="https://radioparadise.com/" data-source-name="Radio Paradise">
         <div class="idx"><span class="num">15</span></div>
-        <div class="cover-wrap"><img src="https://img.radioparadise.com/covers/l/12754.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://img.radioparadise.com/covers/l/12087.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Those to Come</div>
-          <div class="t-sub">The Shins<span class="dot">·</span>Chutes Too Narrow</div>
+          <div class="t-title">Proof</div>
+          <div class="t-sub">Paul Simon<span class="dot">·</span>The Rhythm of the Saints</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjE4MDkyMzQiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=21809234" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTgwMzE4MzUiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=18031835" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Jeff Buckley" data-album="So Real: Songs From Jeff Buckley" data-context="KEXP 播出 · 10-21 10:18" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/ac/84/18/ac8418ee-0a3d-6745-8a79-b85daa17617d/886447683941.jpg/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTg2MDQ3MzIiLCJjbWQiOiJwbGF5In0=" data-web="https://music.163.com/song?id=18604732" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">16</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/18/df/09/18df09a9-e8c5-02c4-e00f-fe20e5e97ad9/5400863103811_cover.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/ac/84/18/ac8418ee-0a3d-6745-8a79-b85daa17617d/886447683941.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Your Lucky Day in Hell</div>
-          <div class="t-sub">EELS<span class="dot">·</span>Beautiful Freak</div>
+          <div class="t-title">Je n’en connais pas la fin</div>
+          <div class="t-sub">Jeff Buckley<span class="dot">·</span>So Real: Songs From Jeff Buckley</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjY3MTE1NzUiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=26711575" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTg2MDQ3MzIiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=18604732" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Dizzy Gillespie Big Band" data-album="Live In Stereo At Chester, PA. June 14, 1957" data-context="KEXP 播出 · 10-21 09:15" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/36/8c/4c/368c4c44-8bd8-0b82-cec5-286c06ae251f/00602567848745.rgb.jpg/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiNTYwOTY1NTM1IiwiY21kIjoicGxheSJ9" data-web="https://music.163.com/song?id=560965535" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">17</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/83/b1/9d/83b19dd3-733c-228b-1b01-573e6cebbbd5/19UMGIM45347.rgb.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/36/8c/4c/368c4c44-8bd8-0b82-cec5-286c06ae251f/00602567848745.rgb.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Waltz #2</div>
-          <div class="t-sub">Elliott Smith<span class="dot">·</span>XO</div>
+          <div class="t-title">A Night in Tunisia</div>
+          <div class="t-sub">Dizzy Gillespie Big Band<span class="dot">·</span>Live In Stereo At Chester, PA. June 14, 1957</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTc1NjYyMDkiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=17566209" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiNTYwOTY1NTM1IiwiY21kIjoicGxheSJ9" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=560965535" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="The Black Crowes" data-album="Shake Your Money Maker" data-context="Radio Paradise · Eclectic频道正在播" data-artwork="https://img.radioparadise.com/covers/l/11726.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTgyMzIzMDQ5OCIsImNtZCI6InBsYXkifQ==" data-web="https://music.163.com/song?id=1823230498" data-source-url="https://radioparadise.com/" data-source-name="Radio Paradise">
         <div class="idx"><span class="num">18</span></div>
-        <div class="cover-wrap"><img src="https://img.radioparadise.com/covers/l/21924.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://img.radioparadise.com/covers/l/11726.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Henry, come on</div>
-          <div class="t-sub">Lana Del Rey<span class="dot">·</span>Henry, come on</div>
+          <div class="t-title">She Talks to Angels</div>
+          <div class="t-sub">The Black Crowes<span class="dot">·</span>Shake Your Money Maker</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjY5MzIwNDkzMCIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=2693204930" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTgyMzIzMDQ5OCIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=1823230498" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Angelo Badalamenti" data-album="Twin Peaks: Fire Walk With Me: Music From the Motion Picture Soundtrack" data-context="KEXP 播出 · 10-21 10:32" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music/y2005/m02/d23/h10/s06.bibcglpc.jpg/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTAwMzc4MiIsImNtZCI6InBsYXkifQ==" data-web="https://music.163.com/song?id=1003782" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">19</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/fe/3c/e9/fe3ce992-f373-99b2-3457-c8f90795c2f1/809236000583_cover.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music/y2005/m02/d23/h10/s06.bibcglpc.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Doledrums</div>
-          <div class="t-sub">The Chills<span class="dot">·</span>Kaleidoscope World</div>
+          <div class="t-title">Moving Through Time</div>
+          <div class="t-sub">Angelo Badalamenti<span class="dot">·</span>Twin Peaks: Fire Walk With Me: Music From the Motion Picture Soundtrack</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjE4ODg5NzYiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=21888976" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTAwMzc4MiIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=1003782" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Desire" data-album="Windswept" data-context="KEXP 播出 · 10-21 10:39" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/cb/56/d4/cb56d4b8-152e-6d05-ba41-49532bc3bce2/53.jpg/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiNDc4Njg2OTg4IiwiY21kIjoicGxheSJ9" data-web="https://music.163.com/song?id=478686988" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">20</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music/y2005/m05/d25/h11/s07.gxqcpizn.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/cb/56/d4/cb56d4b8-152e-6d05-ba41-49532bc3bce2/53.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">The Hanging Garden</div>
-          <div class="t-sub">The Cure<span class="dot">·</span>Pornography</div>
+          <div class="t-title">Saturday</div>
+          <div class="t-sub">Desire<span class="dot">·</span>Windswept</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjE5NzAyNTIiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=21970252" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiNDc4Njg2OTg4IiwiY21kIjoicGxheSJ9" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=478686988" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Mylène Farmer" data-album="Remix XL" data-context="KEXP 播出 · 10-21 09:52" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/22/99/82/2299827d-6f3f-7ae8-0632-8a4173fda96b/196871786270.jpg/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjE0NzI3NjU1MCIsImNtZCI6InBsYXkifQ==" data-web="https://music.163.com/song?id=2147276550" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">21</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music/3b/f2/e7/mzi.qssnjlwx.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/22/99/82/2299827d-6f3f-7ae8-0632-8a4173fda96b/196871786270.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Your Baby (Can&#x27;t Stand the Rain)</div>
-          <div class="t-sub">Dean &amp; Britta<span class="dot">·</span>Sonic Souvenirs</div>
+          <div class="t-title">Je te rends ton amour (David Lynch remix)</div>
+          <div class="t-sub">Mylène Farmer<span class="dot">·</span>Remix XL</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><span class="icon-btn disabled" title="没有匹配到网易云">云</span></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjE0NzI3NjU1MCIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=2147276550" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Thelonious Monk" data-album="Underground" data-context="KEXP 播出 · 10-21 09:17" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music/b1/c8/e4/mzi.oosyewvz.jpg/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiNDcwNjg4NzI1IiwiY21kIjoicGxheSJ9" data-web="https://music.163.com/song?id=470688725" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">22</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/77/bc/ec/77bcecdb-c1de-443f-e5db-d48ec7502fe1/192562088135.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music/b1/c8/e4/mzi.oosyewvz.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Jo</div>
-          <div class="t-sub">Haley Heynderickx<span class="dot">·</span>The Bug Collector EP</div>
+          <div class="t-title">Ugly Beauty</div>
+          <div class="t-sub">Thelonious Monk<span class="dot">·</span>Underground</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiNTMwMzI4NDEzIiwiY21kIjoicGxheSJ9" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=530328413" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiNDcwNjg4NzI1IiwiY21kIjoicGxheSJ9" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=470688725" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="David Lindley" data-album="Very Greasy" data-context="Radio Paradise · Rock频道正在播" data-artwork="https://img.radioparadise.com/covers/l/8880.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTM0OTkzMjc2NiIsImNtZCI6InBsYXkifQ==" data-web="https://music.163.com/song?id=1349932766" data-source-url="https://radioparadise.com/" data-source-name="Radio Paradise">
         <div class="idx"><span class="num">23</span></div>
-        <div class="cover-wrap"><img src="https://img.radioparadise.com/covers/l/10827.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://img.radioparadise.com/covers/l/8880.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Knocked Up</div>
-          <div class="t-sub">Kings of Leon<span class="dot">·</span>Because of The Times</div>
+          <div class="t-title">Gimme Da &#x27;Ting</div>
+          <div class="t-sub">David Lindley<span class="dot">·</span>Very Greasy</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTg5MzEyODciLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=18931287" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTM0OTkzMjc2NiIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=1349932766" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Keep Shelly in Athens" data-album="White Rose / Sophia Magdalena Scholl" data-context="KEXP 播出 · 10-21 10:08" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/ba/f1/a3/baf1a3b0-9b62-ffd3-7a22-38bcfa30496c/5056494909980_1.jpg/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjc3MzEzMTgiLCJjbWQiOiJwbGF5In0=" data-web="https://music.163.com/song?id=27731318" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">24</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music69/v4/a5/51/94/a5519435-de32-79f7-3ea9-fcf3ee9e8f06/190374034074.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/ba/f1/a3/baf1a3b0-9b62-ffd3-7a22-38bcfa30496c/5056494909980_1.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Just Like You</div>
-          <div class="t-sub">Ministry<span class="dot">·</span>Twitch</div>
+          <div class="t-title">Sophia Magdalena Scholl</div>
+          <div class="t-sub">Keep Shelly in Athens<span class="dot">·</span>White Rose / Sophia Magdalena Scholl</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjEyMjE1NzAiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=21221570" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjc3MzEzMTgiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=27731318" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li>
-      <li class="track">
+      <li class="track" data-artist="Digable Planets" data-album="Blowout Comb" data-context="KEXP 播出 · 10-21 08:46" data-artwork="https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/9b/51/d6/9b51d651-b814-5d3e-684f-6e456f498aaf/13ULAIM49390.rgb.jpg/600x600bb.jpg" data-orpheus="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTc0MzM5ODAiLCJjbWQiOiJwbGF5In0=" data-web="https://music.163.com/song?id=17433980" data-source-url="https://www.kexp.org/" data-source-name="KEXP">
         <div class="idx"><span class="num">25</span></div>
-        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/1b/06/c1/1b06c182-12f9-a593-2940-b7bfdc4397b0/5037300817668.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
+        <div class="cover-wrap"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/9b/51/d6/9b51d651-b814-5d3e-684f-6e456f498aaf/13ULAIM49390.rgb.jpg/600x600bb.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"></div>
         <div class="t-main">
-          <div class="t-title">Kids in America</div>
-          <div class="t-sub">Kim Wilde<span class="dot">·</span>Kim Wilde</div>
+          <div class="t-title">Black Ego</div>
+          <div class="t-sub">Digable Planets<span class="dot">·</span>Blowout Comb</div>
         </div>
         <div class="t-side">
-          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMjg3ODQ2OSIsImNtZCI6InBsYXkifQ==" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=2878469" target="_blank" rel="noopener" title="打开网页版">网</a></div>
+          <div class="row-actions"><a class="icon-btn" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTc0MzM5ODAiLCJjbWQiOiJwbGF5In0=" title="在网易云客户端播放">云</a><a class="icon-btn" href="https://music.163.com/song?id=17433980" target="_blank" rel="noopener" title="打开网页版">网</a></div>
         </div>
       </li></ol>
     </div>
 
     <aside class="col-side">
       <div class="card pick-card">
-        <p class="card-label">今日主打</p>
-        <div class="pick-cover"><img src="https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/ad/88/17/ad881758-6be5-8d3a-b1ff-e677b082acf3/607618024529.png/600x600bb.jpg" alt="" referrerpolicy="no-referrer"></div>
-        <h2 class="pick-artist">Film School</h2>
-        <p class="pick-album">Alwaysnever</p>
-        <p class="pick-context">KEXP 播出 · 10-21 15:40</p>
-        <div class="pick-actions"><a class="chip" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMTc3OTg1NjEiLCJjbWQiOiJwbGF5In0=">在客户端播放</a><a class="chip" href="https://music.163.com/song?id=17798561" target="_blank" rel="noopener">网页版</a></div>
-        <a class="source-link" href="https://www.kexp.org/" target="_blank" rel="noopener">→ 查看原文</a>
+        <p class="card-label" id="pickLabel">今日主打</p>
+        <div class="pick-cover"><img id="pickImg" src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/92/a4/18/92a41855-1f9c-88c4-e646-438bf88af382/65809.jpg/600x600bb.jpg" alt="" referrerpolicy="no-referrer"></div>
+        <h2 class="pick-artist" id="pickArtist">Wishy</h2>
+        <p class="pick-album" id="pickAlbum">Nature’s Pill</p>
+        <p class="pick-context" id="pickContext">KEXP 播出 · 10-21 15:49</p>
+        <div class="pick-actions">
+          <a class="chip" id="pickNetease" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMzM3ODE1MzU1MSIsImNtZCI6InBsYXkifQ==">在客户端播放</a>
+          <a class="chip" id="pickWeb" href="https://music.163.com/song?id=3378153551" target="_blank" rel="noopener">网页版</a>
+        </div>
+        <a class="source-link" id="pickSource" href="https://www.kexp.org/" target="_blank" rel="noopener">→ 查看原文</a>
       </div>
 
       <div class="card">
@@ -334,5 +339,61 @@
     </aside>
   </section>
 </main>
+
+<script>
+(function () {
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.track'));
+  var pick = {
+    label: document.getElementById('pickLabel'),
+    img: document.getElementById('pickImg'),
+    artist: document.getElementById('pickArtist'),
+    album: document.getElementById('pickAlbum'),
+    context: document.getElementById('pickContext'),
+    netease: document.getElementById('pickNetease'),
+    web: document.getElementById('pickWeb'),
+    source: document.getElementById('pickSource')
+  };
+  function select(row) {
+    rows.forEach(function (r) { r.classList.remove('selected'); });
+    row.classList.add('selected');
+    pick.label.textContent = '正在查看';
+    var art = row.dataset.artwork || '';
+    if (art) {
+      pick.img.src = art;
+      pick.img.style.display = 'block';
+    } else {
+      pick.img.removeAttribute('src');
+      pick.img.style.display = 'none';
+    }
+    pick.artist.textContent = row.dataset.artist || '';
+    pick.album.textContent = row.dataset.album || '';
+    pick.context.textContent = row.dataset.context || '';
+    if (row.dataset.orpheus) {
+      pick.netease.href = row.dataset.orpheus;
+      pick.netease.classList.remove('disabled');
+    } else {
+      pick.netease.href = '#';
+      pick.netease.classList.add('disabled');
+    }
+    if (row.dataset.web) {
+      pick.web.href = row.dataset.web;
+      pick.web.classList.remove('disabled');
+    } else {
+      pick.web.href = '#';
+      pick.web.classList.add('disabled');
+    }
+    pick.source.href = row.dataset.sourceUrl || '#';
+    pick.source.textContent = row.dataset.sourceName
+      ? '→ 查看 ' + row.dataset.sourceName + ' 原文'
+      : '→ 查看原文';
+  }
+  rows.forEach(function (row) {
+    row.addEventListener('click', function (ev) {
+      if (ev.target.closest('a')) return;
+      select(row);
+    });
+  });
+})();
+</script>
 </body>
 </html>
