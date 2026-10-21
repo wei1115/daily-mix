@@ -271,12 +271,25 @@
       side.append(actions);
 
       li.append(idx, coverNode(track), main, side);
-      li.addEventListener("click", () => openTrack(track));
+      li.addEventListener("click", (ev) => {
+        if (ev.target.closest("a, button")) return;
+        selectTrack(i);
+      });
       list.append(li);
     });
   }
 
-  function renderPick(track) {
+  function selectTrack(index) {
+    const track = state.playlist && state.playlist.tracks[index];
+    if (!track) return;
+    renderPick(track, false);
+    document.querySelectorAll(".track").forEach((row) => {
+      row.classList.toggle("selected", Number(row.dataset.index) === index);
+    });
+  }
+
+  function renderPick(track, initial = true) {
+    $("pickLabel").textContent = initial ? "今日主打" : "正在查看";
     const img = $("pickImg");
     const initial = $("pickInitial");
     img.style.display = track.artwork ? "block" : "none";
