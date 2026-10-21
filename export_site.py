@@ -129,13 +129,6 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
 
     hero_sid = song_id(hero.get("netease_url", ""))
     hero_cover = hero.get("artwork") or ""
-    hero_img = (f'<img src="{escape(hero_cover)}" alt="" referrerpolicy="no-referrer">'
-                if hero_cover else
-                '<div class="pick-initial">' + escape((hero.get("artist") or "?")[:1].upper()) + "</div>")
-    hero_cloud = (f'<a class="chip" href="{escape(orpheus_url(hero_sid))}">在客户端播放</a>'
-                  if hero_sid else '<span class="chip disabled">未匹配网易云</span>')
-    hero_web = (f'<a class="chip" href="{escape(hero.get("netease_url", ""))}" target="_blank" rel="noopener">网页版</a>'
-                if hero.get("netease_url") else "")
 
     regen = (f'<a class="ghost-btn" href="{escape(REGENERATE_URL)}" target="_blank" rel="noopener">重新生成</a>'
              if REGENERATE_URL else "")
@@ -291,19 +284,28 @@ def main():
                     os.path.join(ASSETS, "style.css"))
 
     days = available_days()
+    rendered = []
     for d in days:
-        page = render_page(d, load_day(d), days)
+        try:
+            data = load_day(d)
+        except (OSError, json.JSONDecodeError):
+            print(f"  skip unreadable {d}.json")
+            continue
         with open(os.path.join(SITE, f"{d}.html"), "w", encoding="utf-8") as fh:
-            fh.write(page)
+            fh.write(render_page(d, data, days))
+        rendered.append(d)
 
-    latest = days[0]
+    if not rendered:
+        raise SystemExit("没有可渲染的歌单数据")
+
+    latest = rendered[0]
     with open(os.path.join(SITE, "index.html"), "w", encoding="utf-8") as fh:
         fh.write(render_page(latest, load_day(latest), days))
 
     with open(os.path.join(DATA, "index.json"), "w", encoding="utf-8") as fh:
-        json.dump({"days": days}, fh, ensure_ascii=False, indent=1)
+        json.dump({"days": rendered}, fh, ensure_ascii=False, indent=1)
 
-    print(f"static site ready: {SITE} ({len(days)} day(s), latest {latest})")
+    print(f"static site ready: {SITE} ({len(rendered)} day(s), latest {latest})")
 
 
 if __name__ == "__main__":
