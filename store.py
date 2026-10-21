@@ -69,13 +69,6 @@ def list_dates(limit: int = 30):
     return [{"date": r["date"], "created_at": r["created_at"]} for r in rows]
 
 
-def seen_keys(days: int = 14) -> set[str]:
-    cutoff = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
-    with _lock, closing(_connect()) as conn:
-        rows = conn.execute("SELECT key FROM seen WHERE last_seen >= ?", (cutoff,)).fetchall()
-    return {r["key"] for r in rows}
-
-
 def seen_map(days: int = 30) -> dict[str, str]:
     """key -> last_seen date (YYYY-MM-DD), for per-source lookback windows."""
     cutoff = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
