@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>每日混音 · Daily Mix</title>
+<link rel="stylesheet" href="/web/style.css">
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-dot"></span>
+    <span class="brand-name">每日混音</span>
+    <span class="brand-sub">DAILY&nbsp;MIX</span>
+  </div>
+  <div class="top-actions">
+    <select id="archive" class="archive" title="历史歌单" aria-label="历史歌单"></select>
+    <button id="refresh" class="ghost-btn" title="重新生成今天的歌单">
+      <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      重新生成
+    </button>
+  </div>
+</header>
+
+<main>
+  <section id="loading" class="loading">
+    <p class="eyebrow">TODAY'S SELECTION</p>
+    <h1 class="loading-title">正在挑选今天的 18 首</h1>
+    <p id="loadDetail" class="loading-detail">连接 KEXP、Pitchfork、AllMusic、Radio Paradise…</p>
+    <div class="load-bar"><div id="loadBar"></div></div>
+    <p class="loading-note">首次生成需要 30–90 秒，之后当天会直接读缓存。</p>
+  </section>
+
+  <section id="errorState" class="error-state hidden">
+    <p class="eyebrow">SOMETHING BROKE</p>
+    <h2 id="errTitle">生成失败</h2>
+    <p id="errDetail" class="loading-detail"></p>
+    <button id="retryBtn" class="solid-btn">重试</button>
+  </section>
+
+  <section id="content" class="layout hidden">
+    <div class="col-main">
+      <div class="meta-line">
+        <span id="dateLabel" class="mono"></span>
+        <span class="meta-sep">/</span>
+        <span id="statsLabel" class="mono"></span>
+      </div>
+      <ol id="trackList" class="track-list"></ol>
+    </div>
+
+    <aside class="col-side">
+      <div class="card pick-card">
+        <p class="card-label">今日主打</p>
+        <div class="pick-cover" id="pickCover">
+          <img id="pickImg" alt="">
+          <span id="pickInitial" class="pick-initial"></span>
+        </div>
+        <h2 id="pickArtist" class="pick-artist"></h2>
+        <p id="pickAlbum" class="pick-album"></p>
+        <p id="pickContext" class="pick-context"></p>
+        <div class="pick-actions">
+          <a id="pickNetease" class="chip" target="_blank" rel="noopener">网易云</a>
+          <a id="pickWeb" class="chip" target="_blank" rel="noopener">网页</a>
+        </div>
+        <a id="pickSource" class="source-link" target="_blank" rel="noopener"></a>
+      </div>
+
+      <div class="card">
+        <p class="card-label">导出歌单</p>
+        <div class="export-grid">
+          <button id="copyBtn" class="ghost-btn wide">复制清单</button>
+          <button id="csvBtn" class="ghost-btn wide">下载 CSV</button>
+        </div>
+        <p class="hint">CSV 可交给 Soundiiz / TuneMyMusic 迁进网易云音乐。</p>
+      </div>
+
+      <div class="card">
+        <p class="card-label">今日来源</p>
+        <ul id="sourceList" class="source-list"></ul>
+        <p id="sourceErrors" class="hint warn"></p>
+      </div>
+
+      <div class="card">
+        <p class="card-label">本地数据</p>
+        <p id="dbStats" class="stats-line">—</p>
+        <button id="clearBtn" class="ghost-btn wide">清理过往缓存</button>
+        <p class="hint">保留今天的歌单；清掉历史歌单、封面与网易云匹配缓存、30 天前的去重记录。</p>
+      </div>
+    </aside>
+  </section>
+</main>
+
+<script src="/web/app.js"></script>
+</body>
+</html>

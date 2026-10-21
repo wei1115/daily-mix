@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+
+# 隧道工具（体积大，不要进仓库）
+tunnel/cloudflared.exe
+tunnel/vendor/
+tunnel/tmp/
+
+# 本机凭据与备份
+access.txt
+backup/
+
+# 临时文件
+_pw_*.txt
+*.log
