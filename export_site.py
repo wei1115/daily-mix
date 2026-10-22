@@ -185,30 +185,31 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
     </div>
 
     <aside class="col-side">
-      <div class="card pick-card">
-        <p class="card-label" id="pickLabel">今日主打</p>
-        <div class="pick-cover"><img id="pickImg" src="{escape(hero_cover)}" alt="" referrerpolicy="no-referrer"></div>
-        <h2 class="pick-artist" id="pickArtist">{escape(hero.get("artist", ""))}</h2>
-        <p class="pick-album" id="pickAlbum">{escape(hero.get("album", ""))}</p>
-        <p class="pick-context" id="pickContext">{escape(hero.get("context", ""))}</p>
-        <div class="pick-actions">
-          <a class="chip" id="pickNetease" href="{escape(orpheus_url(hero_sid)) if hero_sid else '#'}">在客户端播放</a>
-          <a class="chip" id="pickWeb" href="{escape(hero.get("netease_url", "")) if hero.get("netease_url") else '#'}" target="_blank" rel="noopener">网页版</a>
+      <div class="deck" id="deck">
+        <div class="card pick-card deck-card is-front">
+          <p class="card-label" id="pickLabel">今日主打</p>
+          <div class="pick-cover"><img id="pickImg" src="{escape(hero_cover)}" alt="" referrerpolicy="no-referrer"></div>
+          <h2 class="pick-artist" id="pickArtist">{escape(hero.get("artist", ""))}</h2>
+          <p class="pick-album" id="pickAlbum">{escape(hero.get("album", ""))}</p>
+          <p class="pick-context" id="pickContext">{escape(hero.get("context", ""))}</p>
+          <div class="pick-actions">
+            <a class="chip" id="pickNetease" href="{escape(orpheus_url(hero_sid)) if hero_sid else '#'}">在客户端播放</a>
+            <a class="chip" id="pickWeb" href="{escape(hero.get("netease_url", "")) if hero.get("netease_url") else '#'}" target="_blank" rel="noopener">网页版</a>
+          </div>
+          <a class="source-link" id="pickSource" href="{escape(hero.get("source_url", "#"))}" target="_blank" rel="noopener">→ 查看原文</a>
         </div>
-        <a class="source-link" id="pickSource" href="{escape(hero.get("source_url", "#"))}" target="_blank" rel="noopener">→ 查看原文</a>
-      </div>
 
-      <div class="card detail-card">
-        <p class="card-label">曲目信息</p>
-        <dl class="facts">
-          <div><dt>风格</dt><dd id="dtGenre">{escape(hero.get("genre", "") or "未知")}</dd></div>
-          <div><dt>年代</dt><dd id="dtYear">{escape(hero.get("year", "") or "未知")}</dd></div>
-          <div><dt>艺人</dt><dd id="dtArtist">{escape(hero.get("artist", "") or "未知")}</dd></div>
-          <div><dt>专辑</dt><dd id="dtAlbum">{escape(hero.get("album", "") or "未知")}</dd></div>
-        </dl>
-        <p class="card-label review-label">收录网站乐评</p>
-        <p id="dtReview" class="review-text">{escape(hero.get("excerpt_zh") or hero.get("excerpt") or "这个来源没有文字乐评（电台类来源只提供曲目信息）。")}</p>
-        <p id="dtReviewSource" class="hint">{("机翻自 " + SOURCE_NAMES.get(hero.get("source", ""), "") + " 原文，仅供参考") if hero.get("excerpt") else ""}</p>
+        <div class="card detail-card deck-card is-back">
+          <p class="card-label">曲目信息</p>
+          <dl class="facts">
+            <div><dt>风格</dt><dd id="dtGenre">{escape(hero.get("genre", "") or "未知")}</dd></div>
+            <div><dt>年代</dt><dd id="dtYear">{escape(hero.get("year", "") or "未知")}</dd></div>
+            <div><dt>艺人</dt><dd id="dtArtist">{escape(hero.get("artist", "") or "未知")}</dd></div>
+            <div><dt>专辑</dt><dd id="dtAlbum">{escape(hero.get("album", "") or "未知")}</dd></div>
+          </dl>
+          <p class="card-label review-label">收录网站乐评</p>
+          <p id="dtReview" class="review-text">{escape(hero.get("excerpt_zh") or hero.get("excerpt") or "这个来源没有文字乐评（电台类来源只提供曲目信息）。")}</p>
+        </div>
       </div>
 
       <div class="card">
@@ -241,8 +242,7 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
     year: document.getElementById('dtYear'),
     dtArtist: document.getElementById('dtArtist'),
     dtAlbum: document.getElementById('dtAlbum'),
-    review: document.getElementById('dtReview'),
-    reviewSource: document.getElementById('dtReviewSource')
+    review: document.getElementById('dtReview')
   }};
   function select(row) {{
     rows.forEach(function (r) {{ r.classList.remove('selected'); }});
@@ -284,9 +284,6 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
     pick.dtAlbum.textContent = row.dataset.album || '未知';
     pick.review.textContent = row.dataset.review
       || '这个来源没有文字乐评（电台类来源只提供曲目信息）。';
-    pick.reviewSource.textContent = row.dataset.hasExcerpt
-      ? '机翻自 ' + (row.dataset.sourceName || '') + ' 原文，仅供参考'
-      : '';
   }}
   rows.forEach(function (row) {{
     row.addEventListener('click', function (ev) {{
@@ -294,6 +291,45 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
       select(row);
     }});
   }});
+
+  /* 卡片堆叠：左滑或点露出的底卡切换 */
+  var deck = document.getElementById('deck');
+  if (deck) {{
+    var cards = Array.prototype.slice.call(deck.querySelectorAll('.deck-card'));
+    var front = 0, animating = false, startX = null;
+    var renderDeck = function () {{
+      cards.forEach(function (card, i) {{
+        card.classList.toggle('is-front', i === front);
+        card.classList.toggle('is-back', i !== front);
+        card.classList.remove('leaving');
+      }});
+    }};
+    var swap = function () {{
+      if (animating) return;
+      animating = true;
+      cards[front].classList.add('leaving');
+      setTimeout(function () {{
+        front = (front + 1) % cards.length;
+        renderDeck();
+        setTimeout(function () {{ animating = false; }}, 80);
+      }}, 300);
+    }};
+    deck.addEventListener('pointerdown', function (ev) {{
+      if (ev.target.closest('a')) return;
+      startX = ev.clientX;
+    }});
+    deck.addEventListener('pointerup', function (ev) {{
+      if (startX === null) return;
+      var dx = ev.clientX - startX;
+      startX = null;
+      if (dx < -40) swap();
+    }});
+    deck.addEventListener('click', function (ev) {{
+      var card = ev.target.closest('.deck-card');
+      if (card && card.classList.contains('is-back')) swap();
+    }});
+    renderDeck();
+  }}
 }})();
 </script>
 </body>
