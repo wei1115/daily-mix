@@ -51,33 +51,34 @@
     </div>
 
     <aside class="col-side">
-      <div class="card pick-card">
-        <p class="card-label" id="pickLabel">今日主打</p>
-        <div class="pick-cover" id="pickCover">
-          <img id="pickImg" alt="">
-          <span id="pickInitial" class="pick-initial"></span>
+      <div class="deck" id="deck">
+        <div class="card pick-card deck-card is-front">
+          <p class="card-label" id="pickLabel">今日主打</p>
+          <div class="pick-cover" id="pickCover">
+            <img id="pickImg" alt="">
+            <span id="pickInitial" class="pick-initial"></span>
+          </div>
+          <h2 id="pickArtist" class="pick-artist"></h2>
+          <p id="pickAlbum" class="pick-album"></p>
+          <p id="pickContext" class="pick-context"></p>
+          <div class="pick-actions">
+            <a id="pickNetease" class="chip" target="_blank" rel="noopener">网易云</a>
+            <a id="pickWeb" class="chip" target="_blank" rel="noopener">网页</a>
+          </div>
+          <a id="pickSource" class="source-link" target="_blank" rel="noopener"></a>
         </div>
-        <h2 id="pickArtist" class="pick-artist"></h2>
-        <p id="pickAlbum" class="pick-album"></p>
-        <p id="pickContext" class="pick-context"></p>
-        <div class="pick-actions">
-          <a id="pickNetease" class="chip" target="_blank" rel="noopener">网易云</a>
-          <a id="pickWeb" class="chip" target="_blank" rel="noopener">网页</a>
-        </div>
-        <a id="pickSource" class="source-link" target="_blank" rel="noopener"></a>
-      </div>
 
-      <div class="card detail-card">
-        <p class="card-label">曲目信息</p>
-        <dl class="facts">
-          <div><dt>风格</dt><dd id="dtGenre">—</dd></div>
-          <div><dt>年代</dt><dd id="dtYear">—</dd></div>
-          <div><dt>艺人</dt><dd id="dtArtist">—</dd></div>
-          <div><dt>专辑</dt><dd id="dtAlbum">—</dd></div>
-        </dl>
-        <p class="card-label review-label">收录网站乐评</p>
-        <p id="dtReview" class="review-text">—</p>
-        <p id="dtReviewSource" class="hint"></p>
+        <div class="card detail-card deck-card is-back">
+          <p class="card-label">曲目信息</p>
+          <dl class="facts">
+            <div><dt>风格</dt><dd id="dtGenre">—</dd></div>
+            <div><dt>年代</dt><dd id="dtYear">—</dd></div>
+            <div><dt>艺人</dt><dd id="dtArtist">—</dd></div>
+            <div><dt>专辑</dt><dd id="dtAlbum">—</dd></div>
+          </dl>
+          <p class="card-label review-label">收录网站乐评</p>
+          <p id="dtReview" class="review-text">—</p>
+        </div>
       </div>
 
       <div class="card">
