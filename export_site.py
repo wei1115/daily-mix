@@ -359,30 +359,30 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
       requestAnimationFrame(function () {{ card.classList.remove('entering'); }});
       setTimeout(function () {{ animating = false; }}, 440);
     }};
-    /* 手指左滑切换；鼠标左键点按切换 */
-    var startX = null, startY = null, lastSwipe = 0;
+    /* 两者互斥：桌面只认左键点按，触屏只认左滑 */
     var toggle = function () {{
       if (front === 0) swap(); else back();
     }};
-    deck.addEventListener('pointerdown', function (ev) {{
-      startX = ev.clientX;
-      startY = ev.clientY;
-    }});
-    deck.addEventListener('pointerup', function (ev) {{
-      if (startX === null) return;
-      var dx = ev.clientX - startX;
-      var dy = ev.clientY - startY;
-      startX = null;
-      if (dx < -40 && Math.abs(dx) > Math.abs(dy)) {{
-        lastSwipe = Date.now();
+    var desktop = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (desktop) {{
+      deck.addEventListener('click', function (ev) {{
+        if (ev.target.closest('a')) return;
         toggle();
-      }}
-    }});
-    deck.addEventListener('click', function (ev) {{
-      if (ev.target.closest('a')) return;
-      if (Date.now() - lastSwipe < 450) return;
-      toggle();
-    }});
+      }});
+    }} else {{
+      var startX = null, startY = null;
+      deck.addEventListener('pointerdown', function (ev) {{
+        startX = ev.clientX;
+        startY = ev.clientY;
+      }});
+      deck.addEventListener('pointerup', function (ev) {{
+        if (startX === null) return;
+        var dx = ev.clientX - startX;
+        var dy = ev.clientY - startY;
+        startX = null;
+        if (dx < -40 && Math.abs(dx) > Math.abs(dy)) toggle();
+      }});
+    }}
     renderDeck();
   }}
 
