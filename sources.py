@@ -75,6 +75,8 @@ class Candidate:
     score: float = 0.0
     artwork: str = ""
     netease_url: str = ""
+    netease_title: str = ""      # 网易云曲库里的歌名（用于导出匹配）
+    netease_artist: str = ""     # 网易云曲库里的艺人名
     genre: str = ""
     excerpt: str = ""            # 来源站原文摘要（英文）
     excerpt_zh: str = ""         # 机器翻译后的中文
