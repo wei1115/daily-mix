@@ -15,6 +15,7 @@
     pitchfork: "Pitchfork",
     aquarium: "Aquarium Drunkard",
     quietus: "The Quietus",
+    soulbounce: "SoulBounce",
     radioparadise: "Radio Paradise",
   };
 
