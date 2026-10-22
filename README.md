@@ -33,7 +33,6 @@ python export_site.py          # 本地试渲染，产物在 site/
 |---|---|---|
 | [KEXP](https://www.kexp.org/) | 过去 24 小时的播出曲目 | 西雅图公共电台，人工编排；带「重度轮播」等权重 |
 | [Pitchfork](https://pitchfork.com/reviews/best/albums/) | 最佳新专辑 | 取榜单条目，再用单篇页的 `og:title` 解析「艺人: 专辑」 |
-| [AllMusic](https://www.allmusic.com/newreleases) | 本周编辑精选新碟 | 页面内嵌 JSON-LD；**仅本地可用**，机房 IP 会被 403 |
 | [Aquarium Drunkard](https://aquariumdrunkard.com/) | 编辑推荐专辑 | RSS 标题是「艺人 :: 专辑」，云端可访问 |
 | [The Quietus](https://thequietus.com/) | 深度乐评专辑 | RSS 标题格式不统一，解析时会剥掉「Album Review:」这类前缀 |
 | [Radio Paradise](https://radioparadise.com/) | 6 个频道的正在播放 | 人工编排、无广告，跨年代选曲 |
@@ -41,13 +40,13 @@ python export_site.py          # 本地试渲染，产物在 site/
 专辑类来源会通过 iTunes Search 解析出一首代表曲目，同时拿到封面。
 所有来源都是**公开页面/公开接口**，没有登录、没有绕过付费墙。任一来源挂掉只会在侧栏报错，不影响出歌单。
 
-> Bandcamp Daily 曾尝试接入，但它对 GitHub Actions 的机房 IP 返回网页而不是 RSS，无法在云端使用，已移除。
+> 已移除：**Bandcamp Daily**（对机房 IP 返回网页而非 RSS）、**AllMusic**（403）、**QQ 音乐**（只保留网易云）。
 
 ## 每日歌单怎么来
 
 - 目标 25 首；同一艺人只出现一次，同一曲风最多 4 首。
-- 来源配额：KEXP ≤9、Pitchfork ≤4、AllMusic ≤4、Radio Paradise ≤4。
-- 去重：电台曲目 14 天内不重复；专辑类来源因为「每周才更新」，窗口放宽到 7 天。
+- 来源配额：KEXP ≤12、Pitchfork ≤5、Aquarium Drunkard ≤4、The Quietus ≤4、Radio Paradise ≤5。
+- 去重：电台曲目 14 天内不重复；专辑类来源近期放宽（`STRICT_ALBUM_DEDUPE = False`），改 True 即恢复 2 天窗口。
 - 排序：编辑推荐优先当「今日主打」，其余按日期做确定性打乱（同一天刷新不会跳来跳去）。
 - 分数 = 来源权重 + KEXP 轮播等级 + 发行时间新鲜度。
 
@@ -125,7 +124,7 @@ dailymix/
 
 **某些歌没有封面？** iTunes 没匹配到，属于正常情况；点行尾的「云」去网易云听完整版。
 
-**来源报错？** 侧栏「今日来源」下方会列出失败原因。AllMusic 对请求头敏感，偶尔会 403，重试即可。
+**来源报错？** 侧栏「今日来源」下方会列出失败原因，通常是个别源临时不可访问，不影响整体出歌单。
 
 **想加/换来源？** 在 `sources.py` 里加一个 `fetch_xxx()`，返回 `Candidate` 列表，再注册进 `fetch_all()` 即可。
 
