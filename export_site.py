@@ -51,6 +51,7 @@ SOURCE_NAMES = {
     "aquarium": "Aquarium Drunkard",
     "quietus": "The Quietus",
     "soulbounce": "SoulBounce",
+    "blow": "吹音乐 Blow",
     "radioparadise": "Radio Paradise",
 }
 
