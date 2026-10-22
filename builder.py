@@ -14,13 +14,13 @@ import store
 
 TARGET = 25
 MAX_ATTEMPTS = 110
-SOURCE_CAPS = {"kexp": 12, "pitchfork": 5, "allmusic": 5, "bandcamp": 4, "radioparadise": 5}
+SOURCE_CAPS = {"kexp": 12, "pitchfork": 5, "allmusic": 5, "aquarium": 4, "radioparadise": 5}
 GENRE_CAP = 4
 LOOKBACK_DAYS = 14
 ALBUM_LOOKBACK_DAYS = 2
 # False = 近期放宽（专辑类不去重）；改成 True 恢复严格去重
 STRICT_ALBUM_DEDUPE = False
-ALBUM_SOURCES = {"pitchfork", "allmusic", "bandcamp"}
+ALBUM_SOURCES = {"pitchfork", "allmusic", "aquarium"}
 _build_lock = threading.Lock()
 
 
