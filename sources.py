@@ -405,6 +405,63 @@ def fetch_aquarium(limit: int = 6):
 
 
 # ---------------------------------------------------------------------------
+# The Quietus — editorial reviews; titles vary, so parse defensively
+# ---------------------------------------------------------------------------
+
+QUIETUS_SKIP = (
+    "interview", "live report", "news", "column", "feature", "playlist",
+    "premiere", "video", "photo", "podcast", "competition", "subscriber",
+)
+
+QUIETUS_PREFIX = re.compile(
+    r"^(?:album\s+(?:review|of\s+the\s+week)|reviews?|track\s+review|"
+    r"film|book|live)\s*[:\-–—]\s*", re.I)
+
+QUIETUS_SPLIT = re.compile(r"\s+(?:–|—|::|\|)\s+")
+
+
+def fetch_quietus(limit: int = 5):
+    out: list[Candidate] = []
+    try:
+        raw = http_get("https://thequietus.com/feed",
+                       referer="https://thequietus.com/")
+    except Exception as exc:  # noqa: BLE001
+        return out, f"Quietus: {exc}"
+
+    samples = []
+    for title, link in _rss_entries(raw):
+        if len(out) >= limit:
+            break
+        if not title or not link:
+            continue
+        if any(word in title.lower() for word in QUIETUS_SKIP):
+            continue
+        stripped = QUIETUS_PREFIX.sub("", title).strip()
+        parts = QUIETUS_SPLIT.split(stripped, maxsplit=1)
+        if len(parts) != 2:
+            if len(samples) < 4:
+                samples.append(title[:50])
+            continue
+        artist, album = parts[0].strip(), parts[1].strip()
+        if not artist or not album:
+            continue
+        out.append(Candidate(
+            artist=artist,
+            title="",
+            album=album,
+            source="quietus",
+            source_label="The Quietus",
+            source_url=link,
+            context="The Quietus 乐评",
+            score=4.2,
+            kind="album",
+        ))
+    if out:
+        return out, None
+    return out, f"Quietus: 0 matched; samples={samples}"
+
+
+# ---------------------------------------------------------------------------
 # Aggregation
 # ---------------------------------------------------------------------------
 
@@ -415,6 +472,7 @@ def fetch_all():
 
     for name, fetcher in (("kexp", fetch_kexp), ("pitchfork", fetch_pitchfork),
                           ("allmusic", fetch_allmusic), ("aquarium", fetch_aquarium),
+                          ("quietus", fetch_quietus),
                           ("radioparadise", fetch_radioparadise)):
         items, err = fetcher()
         stats[name] = len(items)
