@@ -517,7 +517,6 @@
     const cards = Array.from(root.querySelectorAll(".deck-card"));
     let front = 0;
     let animating = false;
-    let startX = null;
 
     const render = () => {
       cards.forEach((card, i) => {
@@ -554,25 +553,11 @@
       setTimeout(() => { animating = false; }, 440);
     };
 
-    root.addEventListener("pointerdown", (ev) => {
-      if (ev.target.closest("a")) return;
-      startX = ev.clientX;
-    });
-    root.addEventListener("pointerup", (ev) => {
-      if (startX === null) return;
-      const dx = ev.clientX - startX;
-      startX = null;
-      if (dx < -40) swap();
-    });
+    /* 左键点一下切换；滚轮交给页面正常滚动 */
     root.addEventListener("click", (ev) => {
-      const card = ev.target.closest(".deck-card");
-      if (card && card.classList.contains("is-back")) swap();
+      if (ev.target.closest("a")) return;
+      if (front === 0) swap(); else back();
     });
-    root.addEventListener("wheel", (ev) => {
-      if (Math.abs(ev.deltaY) < 4) return;
-      ev.preventDefault();
-      if (ev.deltaY > 0) swap(); else back();
-    }, { passive: false });
 
     render();
   }
