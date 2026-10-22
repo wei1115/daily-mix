@@ -33,11 +33,14 @@ python export_site.py          # 本地试渲染，产物在 site/
 |---|---|---|
 | [KEXP](https://www.kexp.org/) | 过去 24 小时的播出曲目 | 西雅图公共电台，人工编排；带「重度轮播」等权重 |
 | [Pitchfork](https://pitchfork.com/reviews/best/albums/) | 最佳新专辑 | 取榜单条目，再用单篇页的 `og:title` 解析「艺人: 专辑」 |
-| [AllMusic](https://www.allmusic.com/newreleases) | 本周编辑精选新碟 | 页面内嵌 JSON-LD，结构最干净 |
+| [AllMusic](https://www.allmusic.com/newreleases) | 本周编辑精选新碟 | 页面内嵌 JSON-LD；**仅本地可用**，机房 IP 会被 403 |
+| [Aquarium Drunkard](https://aquariumdrunkard.com/) | 编辑推荐专辑 | RSS 标题是「艺人 :: 专辑」，云端可访问 |
 | [Radio Paradise](https://radioparadise.com/) | 6 个频道的正在播放 | 人工编排、无广告，跨年代选曲 |
 
 专辑类来源会通过 iTunes Search 解析出一首代表曲目，同时拿到封面。
 所有来源都是**公开页面/公开接口**，没有登录、没有绕过付费墙。任一来源挂掉只会在侧栏报错，不影响出歌单。
+
+> Bandcamp Daily 曾尝试接入，但它对 GitHub Actions 的机房 IP 返回网页而不是 RSS，无法在云端使用，已移除。
 
 ## 每日歌单怎么来
 
