@@ -179,13 +179,13 @@ def _netease_cover(song_id) -> str:
 
 
 def netease_lookup(artist: str, title: str) -> dict:
-    """Return {'url': song page, 'cover': album art} for the best NetEase match."""
-    key = f"ne:{_norm(artist)}|{_norm(title)}"
+    """Return NetEase match: song page, cover, and the catalog's own names."""
+    key = f"ne3:{_norm(artist)}|{_norm(title)}"
     cached = store.cache_get(key, 60)
     if cached is not None:
         return cached
 
-    result = {"url": "", "cover": ""}
+    result = {"url": "", "cover": "", "title": "", "artist": ""}
     try:
         _throttle("other")
         q = urllib.parse.quote(f"{artist} {title}")
@@ -193,11 +193,16 @@ def netease_lookup(artist: str, title: str) -> dict:
             f"https://music.163.com/api/search/get?s={q}&type=1&limit=8&offset=0",
             referer="https://music.163.com/")
         songs = (data.get("result") or {}).get("songs") or []
-        na = _norm(artist)
+        na, nt = _norm(artist), _norm(title)
         for s in songs:
             names = [_norm(a.get("name", "")) for a in (s.get("artists") or [])]
-            if any(_sim(na, n) >= 0.55 for n in names if n):
+            song_title = _norm(s.get("name", ""))
+            title_ok = bool(nt) and (nt in song_title or _sim(nt, song_title) >= 0.5)
+            if title_ok and any(_sim(na, n) >= 0.55 for n in names if n):
                 result["url"] = f"https://music.163.com/song?id={s.get('id')}"
+                result["title"] = s.get("name") or ""
+                result["artist"] = ", ".join(
+                    a.get("name", "") for a in (s.get("artists") or []) if a.get("name"))
                 result["cover"] = _netease_cover(s.get("id"))
                 break
     except Exception:  # noqa: BLE001
@@ -280,6 +285,8 @@ def enrich(candidate, progress=None) -> bool:
 
     ne = netease_lookup(candidate.artist, candidate.title)
     candidate.netease_url = ne.get("url", "")
+    candidate.netease_title = ne.get("title", "")
+    candidate.netease_artist = ne.get("artist", "")
     if not candidate.artwork and ne.get("cover"):
         candidate.artwork = ne["cover"]
     if progress:
