@@ -378,7 +378,8 @@ def fetch_bandcamp(limit: int = 8):
     except Exception as exc:  # noqa: BLE001
         return out, f"Bandcamp: {exc}"
 
-    for title, link in _bandcamp_entries(raw):
+    entries = list(_bandcamp_entries(raw))
+    for title, link in entries:
         if len(out) >= limit:
             break
         if not title or not link:
@@ -404,7 +405,15 @@ def fetch_bandcamp(limit: int = 8):
         ))
         if len(out) >= limit:
             break
-    return out, None
+
+    if out:
+        return out, None
+    if entries:
+        sample = next((t for t, _ in entries if t), "")
+        return out, (f"Bandcamp: 0 matched of {len(entries)} items; "
+                     f"sample={sample[:60]!r}")
+    head = raw[:60].decode("utf-8", "replace")
+    return out, f"Bandcamp: no <item> in response; head={head!r}"
 
 
 # ---------------------------------------------------------------------------
