@@ -401,6 +401,68 @@ def fetch_quietus(limit: int = 5):
 
 
 # ---------------------------------------------------------------------------
+# SoulBounce — R&B/soul reviews; titles are prose, so extract heuristically
+# ---------------------------------------------------------------------------
+
+SOULBOUNCE_SKIP = (
+    "premiere", "exclusive", "tour", "birthday", "on this day", "playlist",
+    "video", "photos", "podcast", "competition", "lost gem", "first listen",
+)
+
+SOULBOUNCE_QUOTE = re.compile(r'[\u201c\u201d"\u2018\u2019\'](.{2,80}?)[\u201c\u201d"\u2018\u2019\']')
+
+SOULBOUNCE_VERB = re.compile(
+    r"\s+(?:Delivers|Offers|Announces|Releases|Drops|Returns|Celebrates|Tunes|"
+    r"Goes|Roars|Reminisces|Radiates|Set|Plans|Shares|Reveals|Is|To|Has|Will|"
+    r"Brings|Takes|Gives|Makes|Chooses|Delves|Collaborate)\b", re.I)
+
+
+def _split_prose_title(title: str) -> tuple[str, str]:
+    """Pull (artist, album) out of a sentence like: NAO ... New Album “Autumn”."""
+    match = SOULBOUNCE_QUOTE.search(title)
+    if not match:
+        return "", ""
+    album = match.group(1).strip()
+    head = title[:match.start()]
+    verb = SOULBOUNCE_VERB.search(head)
+    artist = (head[:verb.start()] if verb else head).strip(" :-–—")
+    return artist, album
+
+
+def fetch_soulbounce(limit: int = 6):
+    out: list[Candidate] = []
+    try:
+        raw = http_get("https://soulbounce.com/category/reviews/feed/",
+                       referer="https://soulbounce.com/")
+    except Exception as exc:  # noqa: BLE001
+        return out, f"SoulBounce: {exc}"
+
+    for title, link in _rss_entries(raw):
+        if len(out) >= limit:
+            break
+        if not title or not link:
+            continue
+        lower = title.lower()
+        if any(word in lower for word in SOULBOUNCE_SKIP):
+            continue
+        artist, album = _split_prose_title(title)
+        if not (2 <= len(artist) <= 60 and 2 <= len(album) <= 80):
+            continue
+        out.append(Candidate(
+            artist=artist,
+            title="",
+            album=album,
+            source="soulbounce",
+            source_label="SoulBounce",
+            source_url=link,
+            context="SoulBounce R&B 推荐",
+            score=3.9,
+            kind="album",
+        ))
+    return out, (None if out else "SoulBounce: 0 matched")
+
+
+# ---------------------------------------------------------------------------
 # Aggregation
 # ---------------------------------------------------------------------------
 
@@ -411,6 +473,7 @@ def fetch_all():
 
     for name, fetcher in (("kexp", fetch_kexp), ("pitchfork", fetch_pitchfork),
                           ("aquarium", fetch_aquarium), ("quietus", fetch_quietus),
+                          ("soulbounce", fetch_soulbounce),
                           ("radioparadise", fetch_radioparadise)):
         items, err = fetcher()
         stats[name] = len(items)
