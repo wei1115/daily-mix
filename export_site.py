@@ -310,11 +310,11 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
     }});
   }});
 
-  /* 卡片堆叠：左滑或点露出的底卡切换 */
+  /* 卡片堆叠：左键点按切换 */
   var deck = document.getElementById('deck');
   if (deck) {{
     var cards = Array.prototype.slice.call(deck.querySelectorAll('.deck-card'));
-    var front = 0, animating = false, startX = null;
+    var front = 0, animating = false;
     var renderDeck = function () {{
       cards.forEach(function (card, i) {{
         card.classList.toggle('is-front', i === front);
@@ -347,24 +347,9 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
       requestAnimationFrame(function () {{ card.classList.remove('entering'); }});
       setTimeout(function () {{ animating = false; }}, 440);
     }};
-    deck.addEventListener('wheel', function (ev) {{
-      if (Math.abs(ev.deltaY) < 4) return;
-      ev.preventDefault();
-      if (ev.deltaY > 0) swap(); else back();
-    }}, {{ passive: false }});
-    deck.addEventListener('pointerdown', function (ev) {{
-      if (ev.target.closest('a')) return;
-      startX = ev.clientX;
-    }});
-    deck.addEventListener('pointerup', function (ev) {{
-      if (startX === null) return;
-      var dx = ev.clientX - startX;
-      startX = null;
-      if (dx < -40) swap();
-    }});
     deck.addEventListener('click', function (ev) {{
-      var card = ev.target.closest('.deck-card');
-      if (card && card.classList.contains('is-back')) swap();
+      if (ev.target.closest('a')) return;
+      if (front === 0) swap(); else back();
     }});
     renderDeck();
   }}
