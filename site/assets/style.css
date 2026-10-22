@@ -279,14 +279,14 @@ main{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:36px 40p
 /* ---------- responsive ---------- */
 @media (max-width:1080px){
   .layout{grid-template-columns:1fr;gap:34px}
-  .col-side{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  .pick-card{grid-row:span 2}
+  .col-side{display:flex;flex-direction:column;gap:16px}
+  .deck{padding:0 14px 14px 0}
 }
 @media (max-width:760px){
   .topbar{padding:14px 18px}
   main{padding:24px 18px 30px}
   .brand-sub{display:none}
-  .col-side{grid-template-columns:1fr}
+  .deck{padding:0 12px 12px 0}
   .track{grid-template-columns:24px 44px minmax(0,1fr) auto;gap:10px}
   .cover-wrap{width:44px;height:44px}
   .row-actions{opacity:1;transform:none;gap:4px}
