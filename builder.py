@@ -14,14 +14,14 @@ import store
 
 TARGET = 25
 MAX_ATTEMPTS = 110
-SOURCE_CAPS = {"kexp": 12, "pitchfork": 5, "allmusic": 5, "aquarium": 4,
+SOURCE_CAPS = {"kexp": 12, "pitchfork": 5, "aquarium": 4,
                "quietus": 4, "radioparadise": 5}
 GENRE_CAP = 4
 LOOKBACK_DAYS = 14
 ALBUM_LOOKBACK_DAYS = 2
 # False = 近期放宽（专辑类不去重）；改成 True 恢复严格去重
 STRICT_ALBUM_DEDUPE = False
-ALBUM_SOURCES = {"pitchfork", "allmusic", "aquarium", "quietus"}
+ALBUM_SOURCES = {"pitchfork", "aquarium", "quietus"}
 _build_lock = threading.Lock()
 
 
@@ -87,7 +87,7 @@ def build(progress=None, force: bool = False, day: str | None = None) -> dict:
             if cached and cached.get("tracks"):
                 return cached
 
-        report("fetch", 4, "正在连接 KEXP / Pitchfork / AllMusic / Radio Paradise…")
+        report("fetch", 4, "正在连接 KEXP / Pitchfork / Aquarium / Quietus / Radio Paradise…")
         candidates, errors, stats = sources.fetch_all()
         report("fetch", 18, f"收到 {len(candidates)} 个候选")
 
