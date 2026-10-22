@@ -38,6 +38,7 @@ SOURCE_NAMES = {
     "kexp": "KEXP",
     "pitchfork": "Pitchfork",
     "allmusic": "AllMusic",
+    "bandcamp": "Bandcamp Daily",
     "radioparadise": "Radio Paradise",
 }
 
