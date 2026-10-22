@@ -444,7 +444,8 @@
   function buildCSV() {
     const rows = [["Title", "Artist", "Album"]];
     state.playlist.tracks.forEach((t) => {
-      rows.push([t.title, matchArtist(t.artist), t.album]);
+      rows.push([t.netease_title || t.title,
+                 matchArtist(t.netease_artist || t.artist), t.album]);
     });
     return "\ufeff" + rows.map((r) => r.map(csvEscape).join(",")).join("\r\n");
   }
