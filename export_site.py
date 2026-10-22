@@ -143,7 +143,7 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{day} · 每日混音</title>
+<title>{day} · Soulboy</title>
 <link rel="stylesheet" href="assets/style.css">
 <style>
   /* 静态页没有悬停态，操作按钮常显 */
@@ -160,7 +160,7 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
 <header class="topbar">
   <div class="brand">
     <span class="brand-dot"></span>
-    <span class="brand-name">每日混音</span>
+    <span class="brand-name">Soulboy</span>
     <span class="brand-sub">DAILY MIX</span>
   </div>
   <div class="top-actions">{regen}</div>
