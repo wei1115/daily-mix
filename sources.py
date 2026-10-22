@@ -482,8 +482,12 @@ def fetch_soulbounce(limit: int = 6):
 BLOW_ALBUM = re.compile(r"《([^》]{1,60})》")
 BLOW_VERB = re.compile(r"(推出|發行|發布|发行|將推出|宣布|帶來|带来|攜|带著|帶著|全新|首張|首张)")
 BLOW_DESC = re.compile(
-    r".*(?:團體|团体|成員|成员|樂團|乐团|歌手|音樂人|音乐人|創作人|创作人|團長|团长|新團|新团)\s*")
-BLOW_TAIL = re.compile(r"[ 　]*(?:推出|發行|發布|发行|帶來|带来|宣布|將推出|首張|首张|全新)+$")
+    r".*(?:團體|团体|成員|成员|樂團|乐团|歌手|音樂人|音乐人|創作人|创作人|團長|团长|新團|新团"
+    r"|新星|團隊|团队|派對|派对|廠牌|厂牌|之光)\s*")
+BLOW_TAIL = re.compile(
+    r"[ 　]*(?:推出|發行|發布|发行|帶來|带来|宣布|將推出|首張|首张|全新|個人|个人|專輯|专辑|新專|新专)+$")
+BLOW_EVENT = re.compile(r"(舉辦|举办|分享會|分享会|巡迴|巡回|特展|開唱|开唱).*$")
+BLOW_ALBUM_SKIP = ("特展", "展覽", "展览", "演唱會")
 BLOW_SKIP = ("演唱會", "巡演", "音樂節", "音乐节", "得獎", "入圍", "入圍名單", "名單", "門票", "开卖", "開賣")
 
 
@@ -493,6 +497,8 @@ def _blow_parse(title: str) -> tuple[str, str]:
     if not match:
         return "", ""
     album = match.group(1).strip()
+    if any(word in album for word in BLOW_ALBUM_SKIP):
+        return "", ""
     head = title[:match.start()].strip()
 
     verb = None
@@ -505,42 +511,62 @@ def _blow_parse(title: str) -> tuple[str, str]:
     if desc:
         head = head[desc.end():].strip()
 
+    head = head[head.rfind("「") + 1:] if "「" in head else head
     artist = head.strip(" ｜|！!，,、-—：:「」『』\"'")
+    artist = re.split(r"[！!]", artist)[-1].strip()
+    artist = BLOW_EVENT.sub("", artist)
     artist = BLOW_TAIL.sub("", artist).strip()
     return artist, album
 
 
-def fetch_blow(limit: int = 6):
-    out: list[Candidate] = []
-    try:
-        raw = http_get("https://blow.streetvoice.com/feed/",
-                       referer="https://blow.streetvoice.com/")
-    except Exception as exc:  # noqa: BLE001
-        return out, f"Blow: {exc}"
+BLOW_PAGES = 3
 
-    for title, link, desc in _rss_entries(raw):
-        if len(out) >= limit:
+
+def fetch_blow(limit: int = 12):
+    out: list[Candidate] = []
+    seen: set[str] = set()
+    failed = ""
+    for page in range(1, BLOW_PAGES + 1):
+        url = ("https://blow.streetvoice.com/feed/" if page == 1
+               else f"https://blow.streetvoice.com/feed/?paged={page}")
+        try:
+            raw = http_get(url, referer="https://blow.streetvoice.com/")
+        except Exception as exc:  # noqa: BLE001
+            failed = str(exc)
             break
-        if not title or not link:
-            continue
-        if any(word in title for word in BLOW_SKIP):
-            continue
-        artist, album = _blow_parse(title)
-        if not artist or not album:
-            continue
-        out.append(Candidate(
-            artist=artist,
-            title="",
-            album=album,
-            source="blow",
-            source_label="吹音乐 Blow",
-            source_url=link,
-            context="吹音乐 华语推荐",
-            excerpt=desc,
-            score=4.0,
-            kind="album",
-        ))
-    return out, (None if out else "Blow: 0 matched")
+        entries = list(_rss_entries(raw))
+        if not entries:
+            break
+        added = 0
+        for title, link, desc in entries:
+            if len(out) >= limit:
+                break
+            if not title or not link or link in seen:
+                continue
+            seen.add(link)
+            if any(word in title for word in BLOW_SKIP):
+                continue
+            artist, album = _blow_parse(title)
+            if not artist or not album:
+                continue
+            out.append(Candidate(
+                artist=artist,
+                title="",
+                album=album,
+                source="blow",
+                source_label="吹音乐 Blow",
+                source_url=link,
+                context="吹音乐 华语推荐",
+                excerpt=desc,
+                score=4.0,
+                kind="album",
+            ))
+            added += 1
+        if not added:
+            break
+    if out:
+        return out, None
+    return out, f"Blow: {failed or '0 matched'}"
 
 
 # ---------------------------------------------------------------------------
