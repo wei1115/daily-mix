@@ -561,30 +561,29 @@
       if (front === 0) swap(); else back();
     };
 
-    /* 手指左滑切换；鼠标左键点按切换 */
-    let startX = null;
-    let startY = null;
-    let lastSwipe = 0;
+    /* 两者互斥：桌面只认左键点按，触屏只认左滑 */
+    const desktop = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-    root.addEventListener("pointerdown", (ev) => {
-      startX = ev.clientX;
-      startY = ev.clientY;
-    });
-    root.addEventListener("pointerup", (ev) => {
-      if (startX === null) return;
-      const dx = ev.clientX - startX;
-      const dy = ev.clientY - startY;
-      startX = null;
-      if (dx < -40 && Math.abs(dx) > Math.abs(dy)) {
-        lastSwipe = Date.now();
+    if (desktop) {
+      root.addEventListener("click", (ev) => {
+        if (ev.target.closest("a")) return;
         toggle();
-      }
-    });
-    root.addEventListener("click", (ev) => {
-      if (ev.target.closest("a")) return;
-      if (Date.now() - lastSwipe < 450) return;   // 刚滑过，别再触发点击
-      toggle();
-    });
+      });
+    } else {
+      let startX = null;
+      let startY = null;
+      root.addEventListener("pointerdown", (ev) => {
+        startX = ev.clientX;
+        startY = ev.clientY;
+      });
+      root.addEventListener("pointerup", (ev) => {
+        if (startX === null) return;
+        const dx = ev.clientX - startX;
+        const dy = ev.clientY - startY;
+        startX = null;
+        if (dx < -40 && Math.abs(dx) > Math.abs(dy)) toggle();
+      });
+    }
 
     render();
   }
