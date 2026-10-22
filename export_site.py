@@ -416,8 +416,12 @@ def write_exports(day: str, payload: dict) -> None:
     tracks = payload.get("tracks", [])
     rows = [["Title", "Artist", "Album"]]
     for track in tracks:
-        rows.append([track.get("title", ""), _match_artist(track.get("artist", "")),
-                     track.get("album", "")])
+        # 有网易云匹配时，用它曲库里的名字，第三方工具命中率更高
+        ne_title = track.get("netease_title") or ""
+        ne_artist = track.get("netease_artist") or ""
+        title = ne_title or track.get("title", "")
+        artist = _match_artist(ne_artist or track.get("artist", ""))
+        rows.append([title, artist, track.get("album", "")])
     csv_text = "\ufeff" + "\r\n".join(",".join(_csv_cell(c) for c in row) for row in rows)
     with open(os.path.join(DOWNLOAD, f"soulboy-{day}.csv"), "w",
               encoding="utf-8", newline="") as fh:
