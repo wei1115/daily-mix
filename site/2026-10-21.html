@@ -344,6 +344,15 @@
       </div>
 
       <div class="card">
+        <p class="card-label">导入网易云</p>
+        <div class="export-grid">
+          <a class="ghost-btn wide" href="download/soulboy-2026-10-21.csv" download>下载 CSV</a>
+          <button class="ghost-btn wide" id="copyList">复制清单</button>
+        </div>
+        <p class="hint">CSV 上传到 Soundiiz 或 TuneMyMusic，选网易云生成歌单；复制清单可粘贴导入。</p>
+      </div>
+
+      <div class="card">
         <p class="card-label">今日来源</p>
         <ul class="source-list"><li class="head"><span>来源</span><span class="n">已选/候选</span></li><li><span>KEXP</span><span class="n">20 / 235</span></li><li><span>Pitchfork</span><span class="n">0 / 8</span></li><li><span>Radio Paradise</span><span class="n">5 / 6</span></li></ul>
         <p class="hint warn">部分来源失败：AllMusic: HTTPError: HTTP Error 403: Forbidden</p>
@@ -467,6 +476,31 @@
       if (front === 0) swap(); else back();
     });
     renderDeck();
+  }
+
+  /* 复制清单 */
+  var copyBtn = document.getElementById('copyList');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', function () {
+      fetch('download/soulboy-2026-10-21.txt')
+        .then(function (r) { return r.text(); })
+        .then(function (txt) {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            return navigator.clipboard.writeText(txt);
+          }
+          var ta = document.createElement('textarea');
+          ta.value = txt;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+        })
+        .then(function () {
+          copyBtn.textContent = '已复制';
+          setTimeout(function () { copyBtn.textContent = '复制清单'; }, 1500);
+        })
+        .catch(function () { copyBtn.textContent = '复制失败'; });
+    });
   }
 })();
 </script>
