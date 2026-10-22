@@ -332,6 +332,26 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
         setTimeout(function () {{ animating = false; }}, 80);
       }}, 300);
     }};
+    var back = function () {{
+      if (animating) return;
+      animating = true;
+      front = (front - 1 + cards.length) % cards.length;
+      var card = cards[front];
+      cards.forEach(function (c, i) {{
+        c.classList.toggle('is-front', i === front);
+        c.classList.toggle('is-back', i !== front);
+        c.classList.remove('leaving');
+      }});
+      card.classList.add('entering');
+      void card.offsetWidth;
+      requestAnimationFrame(function () {{ card.classList.remove('entering'); }});
+      setTimeout(function () {{ animating = false; }}, 440);
+    }};
+    deck.addEventListener('wheel', function (ev) {{
+      if (Math.abs(ev.deltaY) < 4) return;
+      ev.preventDefault();
+      if (ev.deltaY > 0) swap(); else back();
+    }}, {{ passive: false }});
     deck.addEventListener('pointerdown', function (ev) {{
       if (ev.target.closest('a')) return;
       startX = ev.clientX;
