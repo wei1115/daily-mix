@@ -37,7 +37,6 @@ REGENERATE_URL = os.environ.get("REGENERATE_URL", "")
 SOURCE_NAMES = {
     "kexp": "KEXP",
     "pitchfork": "Pitchfork",
-    "allmusic": "AllMusic",
     "aquarium": "Aquarium Drunkard",
     "quietus": "The Quietus",
     "radioparadise": "Radio Paradise",
