@@ -199,9 +199,8 @@ main{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:36px 40p
   border-radius:var(--radius);
   transition:transform .42s cubic-bezier(.22,.8,.3,1),opacity .3s ease;
   will-change:transform;
-  cursor:grab;
+  cursor:pointer;
 }
-.deck-card:active{cursor:grabbing}
 .deck-card > *{transition:opacity .22s ease}
 .deck-card.is-front{transform:translate(0,0);z-index:2}
 .deck-card.is-back{
