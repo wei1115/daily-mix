@@ -342,8 +342,10 @@
     $("dtYear").textContent = track.year || (track.released || "").slice(0, 4) || "未知";
     $("dtArtist").textContent = track.artist || "未知";
     $("dtAlbum").textContent = track.album || "未知";
-    $("dtReview").textContent = track.excerpt_zh || track.excerpt
-      || "这个来源没有文字乐评（电台类来源只提供曲目信息）。";
+
+    const review = track.excerpt_zh || track.excerpt || "";
+    $("dtReview").textContent = review;
+    $("reviewBlock").style.display = review ? "block" : "none";
   }
 
   function renderSources(playlist) {
