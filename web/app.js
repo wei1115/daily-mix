@@ -1,4 +1,4 @@
-/* 每日混音 — frontend */
+/* Soulboy — frontend */
 (() => {
   "use strict";
 
@@ -192,7 +192,7 @@
   function render(playlist) {
     state.playlist = playlist;
     showContent();
-    document.title = `${playlist.date} · 每日混音`;
+    document.title = `${playlist.date} · Soulboy`;
 
     $("dateLabel").textContent = `${playlist.date} ${weekdayCN(playlist.date)}`;
     const sourceCount = new Set(playlist.tracks.map((t) => t.source)).size;
@@ -406,7 +406,7 @@
     if (!state.playlist) return "";
     const lines = state.playlist.tracks.map((t, i) =>
       `${String(i + 1).padStart(2, "0")}. ${t.artist} — ${t.title}`);
-    return `每日混音 ${state.playlist.date}\n${"-".repeat(28)}\n${lines.join("\n")}`;
+    return `Soulboy ${state.playlist.date}\n${"-".repeat(28)}\n${lines.join("\n")}`;
   }
 
   function download(filename, content, mime) {
@@ -453,7 +453,7 @@
 
   $("csvBtn").addEventListener("click", () => {
     if (!state.playlist) return;
-    download(`dailymix-${state.playlist.date}.csv`, buildCSV(), "text/csv;charset=utf-8");
+    download(`soulboy-${state.playlist.date}.csv`, buildCSV(), "text/csv;charset=utf-8");
   });
 
   $("clearBtn").addEventListener("click", async () => {
