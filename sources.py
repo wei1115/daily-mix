@@ -370,6 +370,22 @@ def _bandcamp_entries(raw: bytes):
         yield _clean(title), link
 
 
+def _bandcamp_html_entries(raw: bytes):
+    """Datacenter IPs get the HTML page instead of RSS; scrape article links."""
+    text = raw.decode("utf-8", "replace")
+    seen = set()
+    for href, label in re.findall(
+            r'<a[^>]+href="([^"]*(?:article|album-of-the-day)[^"]*)"[^>]*>(.*?)</a>',
+            text, re.S | re.I):
+        title = _clean(re.sub(r"<[^>]+>", " ", label))
+        if not title or title in seen:
+            continue
+        seen.add(title)
+        if href.startswith("/"):
+            href = "https://daily.bandcamp.com" + href
+        yield title, href
+
+
 BANDCAMP_FEEDS = (
     "https://daily.bandcamp.com/feed",
     "https://daily.bandcamp.com/feed/",
@@ -390,8 +406,10 @@ def fetch_bandcamp(limit: int = 8):
 
         entries = list(_bandcamp_entries(raw))
         if not entries:
+            entries = list(_bandcamp_html_entries(raw))
+        if not entries:
             head = raw[:40].decode("utf-8", "replace").replace("\n", " ")
-            diag.append(f"{url}: html={head!r}")
+            diag.append(f"{url}: no entries, head={head!r}")
             continue
 
         for title, link in entries:
