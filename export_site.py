@@ -31,6 +31,7 @@ import builder  # noqa: E402
 SITE = os.path.join(BASE, "site")
 DATA = os.path.join(SITE, "data")
 ASSETS = os.path.join(SITE, "assets")
+DOWNLOAD = os.path.join(SITE, "download")
 REGENERATE_URL = os.environ.get("REGENERATE_URL", "")
 
 
@@ -230,6 +231,15 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
       </div>
 
       <div class="card">
+        <p class="card-label">导入网易云</p>
+        <div class="export-grid">
+          <a class="ghost-btn wide" href="download/soulboy-{day}.csv" download>下载 CSV</a>
+          <button class="ghost-btn wide" id="copyList">复制清单</button>
+        </div>
+        <p class="hint">CSV 上传到 Soundiiz 或 TuneMyMusic，选网易云生成歌单；复制清单可粘贴导入。</p>
+      </div>
+
+      <div class="card">
         <p class="card-label">今日来源</p>
         <ul class="source-list"><li class="head"><span>来源</span><span class="n">已选/候选</span></li>{source_rows}</ul>
         {error_note}
@@ -354,6 +364,31 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
     }});
     renderDeck();
   }}
+
+  /* 复制清单 */
+  var copyBtn = document.getElementById('copyList');
+  if (copyBtn) {{
+    copyBtn.addEventListener('click', function () {{
+      fetch('download/soulboy-{day}.txt')
+        .then(function (r) {{ return r.text(); }})
+        .then(function (txt) {{
+          if (navigator.clipboard && navigator.clipboard.writeText) {{
+            return navigator.clipboard.writeText(txt);
+          }}
+          var ta = document.createElement('textarea');
+          ta.value = txt;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+        }})
+        .then(function () {{
+          copyBtn.textContent = '已复制';
+          setTimeout(function () {{ copyBtn.textContent = '复制清单'; }}, 1500);
+        }})
+        .catch(function () {{ copyBtn.textContent = '复制失败'; }});
+    }});
+  }}
 }})();
 </script>
 </body>
@@ -361,9 +396,33 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
 """
 
 
+def _csv_cell(value: str) -> str:
+    text = str(value or "")
+    return f'"{text.replace(chr(34), chr(34) * 2)}"' if any(c in text for c in ',"\n') else text
+
+
+def write_exports(day: str, payload: dict) -> None:
+    """Soundiiz 能直接识别的 CSV（英文表头）+ 可直接粘贴的纯文本清单。"""
+    os.makedirs(DOWNLOAD, exist_ok=True)
+    tracks = payload.get("tracks", [])
+    rows = [["Title", "Artist", "Album"]]
+    for track in tracks:
+        rows.append([track.get("title", ""), track.get("artist", ""), track.get("album", "")])
+    csv_text = "\ufeff" + "\r\n".join(",".join(_csv_cell(c) for c in row) for row in rows)
+    with open(os.path.join(DOWNLOAD, f"soulboy-{day}.csv"), "w",
+              encoding="utf-8", newline="") as fh:
+        fh.write(csv_text)
+
+    lines = [f'{t.get("artist", "")} - {t.get("title", "")}'.strip(" -")
+             for t in tracks]
+    with open(os.path.join(DOWNLOAD, f"soulboy-{day}.txt"), "w", encoding="utf-8") as fh:
+        fh.write("\n".join(lines))
+
+
 def main():
     os.makedirs(DATA, exist_ok=True)
     os.makedirs(ASSETS, exist_ok=True)
+    os.makedirs(DOWNLOAD, exist_ok=True)
 
     if "--no-build" not in sys.argv:
         payload = builder.build(force=True)
@@ -395,8 +454,10 @@ def main():
         raise SystemExit("没有可渲染的歌单数据")
 
     latest = rendered[0]
+    latest_payload = load_day(latest)
+    write_exports(latest, latest_payload)
     with open(os.path.join(SITE, "index.html"), "w", encoding="utf-8") as fh:
-        fh.write(render_page(latest, load_day(latest), days))
+        fh.write(render_page(latest, latest_payload, days))
 
     with open(os.path.join(DATA, "index.json"), "w", encoding="utf-8") as fh:
         json.dump({"days": rendered}, fh, ensure_ascii=False, indent=1)
