@@ -1,108 +1,88 @@
 # 部署成公网站点
 
-目标：每天 08:10 自动生成歌单，发布到 Cloudflare Pages，手机随时打开，**不需要你的电脑开机**。
+当前实际架构（已跑通）：
 
 ```
-GitHub Actions（每天生成 + 提交）
+GitHub Actions（每天 08:10 生成 + 提交回仓库）
         ↓
-GitHub 仓库（site/ 目录就是成品）
+Cloudflare Pages（wrangler 直传 site/，不走 Git 集成）
         ↓
-Cloudflare Pages（自动构建部署）
+https://daily-mix.pages.dev
         ↓
-https://mix.soulboy.asia
+https://fm.soulboy.asia
 ```
+
+本机不需要开机，也不需要手动上传。
 
 ---
 
-## 第一步：建仓库并推上去
+## 已经配好的东西
 
-前提：已安装 Git，且有 GitHub 账号。
-
-1. 在 GitHub 上新建一个 **私有** 仓库，比如 `daily-mix`
-2. 在本项目目录执行（把地址换成你的）：
-
-```bash
-cd D:\deepseekwork\dailymix
-git init
-git add .
-git commit -m "init"
-git branch -M main
-git remote add origin https://github.com/<你的用户名>/daily-mix.git
-git push -u origin main
-```
-
-> 仓库设为私有也没问题，Cloudflare Pages 支持授权访问私有仓库。
-
----
-
-## 第二步：跑一次 Actions
-
-1. 打开仓库 → **Actions** 标签页
-2. 左侧选 `daily-mix` → 右侧 **Run workflow**
-3. 等 1–2 分钟，看到绿色勾
-
-跑完之后仓库里会多出：
-
-```
-site/index.html          ← 最新一天的页面
-site/2026-10-21.html     ← 历史页面
-site/data/2026-10-21.json
-data/dailymix.db         ← 去重和缓存，保证每天不重复、构建更快
-```
-
-**为什么要提交 `data/dailymix.db`**：不然每次 Action 都是全新环境，昨天的歌今天还会再选一遍。提交它，去重历史就保住了。
-
----
-
-## 第三步：接 Cloudflare Pages
-
-1. 登录 https://dash.cloudflare.com → 左侧 **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
-2. 选中刚才的仓库
-3. 构建设置：
-
-| 项目 | 填什么 |
+| 项 | 值 |
 |---|---|
-| Framework preset | None |
-| Build command | 留空 |
-| Build output directory | `site` |
+| 仓库 | `github.com/wei1115/daily-mix` |
+| 工作流 | `.github/workflows/daily.yml` |
+| Pages 项目 | `daily-mix`（Direct Upload 创建） |
+| 线上地址 | `https://fm.soulboy.asia`（备用 `https://daily-mix.pages.dev`） |
 
-4. 点 **Save and Deploy**
+GitHub Secrets：
 
-一两分钟后你会拿到一个 `xxx.pages.dev` 地址，手机就能打开了。
+- `CLOUDFLARE_API_TOKEN` —— Cloudflare 令牌，权限 `Account → Cloudflare Pages → Edit`
+- `CLOUDFLARE_ACCOUNT_ID` —— `520f723fe41615ec74c0af6f6bb3aad4`
 
----
-
-## 第四步：绑自己的域名（可选）
-
-前提：`soulboy.asia` 已完成实名，且 NS 已指向 Cloudflare。
-
-1. Pages 项目 → **Custom domains** → **Set up a custom domain**
-2. 输入 `mix.soulboy.asia`
-3. Cloudflare 会自动加一条 CNAME 并签证书，等 1–2 分钟
-
-完成。之后地址就是 `https://mix.soulboy.asia`，永久不变。
+> 注意：Cloudflare 的 Git 集成在部分地区会卡在 GitHub 授权回跳，所以 Pages 项目是用「直接上传」创建的，
+> 之后由 workflow 里的 `cloudflare/wrangler-action` 把 `site/` 推上去。
 
 ---
 
-## 日常维护
+## 每天会发生什么
 
-**想立刻重新生成**：GitHub 仓库 → Actions → Run workflow。跑完 1–2 分钟后刷新页面。
+1. 08:10（北京时间）GitHub Actions 自动触发
+2. `python export_site.py` 抓四个源、生成当天歌单、渲染 `site/`
+3. 把 `site/` 和 `data/dailymix.db` 提交回仓库
+4. `wrangler pages deploy site` 发布到 Cloudflare Pages
 
-**想让它显示“重新生成”按钮**：把 Actions 页面地址填进环境变量 `REGENERATE_URL` 再跑一次：
+GitHub 的 cron 可能延迟几分钟到半小时。
+
+---
+
+## 手动重新生成
+
+仓库 → **Actions** → 左侧 `daily-mix` → **Run workflow**。
+
+跑完约 1–2 分钟，线上页面就更新了。
+
+---
+
+## 自定义域名（已配置）
+
+1. Cloudflare → **Workers & Pages** → 项目 `daily-mix` → **Custom domains**
+2. **Set up a custom domain**
+3. 输入 `fm.soulboy.asia`
+4. Cloudflare 自动加 CNAME 并签证书，1–2 分钟生效
+
+前提：`soulboy.asia` 的 NS 已指向 Cloudflare（`leah` / `miguel`）。
+
+---
+
+## 改样式 / 改逻辑
+
+改本地的 `web/style.css`、`sources.py` 等，然后：
 
 ```bash
-REGENERATE_URL=https://github.com/<你>/daily-mix/actions/workflows/daily.yml python export_site.py
+git add -A
+git commit -m "..."
+git push
 ```
 
-**改样式**：改 `web/style.css`，下次生成会自动复制到 `site/assets/style.css`。
-
-**换时间**：改 `.github/workflows/daily.yml` 里的 cron（UTC 时间，北京时间减 8 小时）。
+或者直接改 GitHub 网页上的文件。下一次（或手动触发）Actions 就会用新代码。
 
 ---
 
-## 已知限制
+## 成本
 
-- GitHub 的定时任务可能延迟几分钟到半小时，不保证 8:10 整点
-- 页面上的「云」按钮会触发浏览器的“是否打开网易云”询问，勾选“始终允许”后不再提示
-- 手机上点「云」不会唤起桌面客户端，只会打开网页版
-- 私有仓库的 Actions 每月有免费额度（公开仓库不限），个人用途绰绰有余
+| 项目 | 费用 |
+|---|---|
+| GitHub 私有/公开仓库 + Actions | 免费 |
+| Cloudflare Pages | 免费（每月 500 次构建、无限流量） |
+| 域名 | 首年 ¥8（.asia），每年续费 |
