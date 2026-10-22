@@ -16,7 +16,7 @@ import time
 import urllib.parse
 
 import store
-from sources import FetchError, http_get, http_json
+from sources import FetchError, http_json
 
 GAP_ITUNES = 0.8
 GAP_OTHER = 0.20
@@ -209,10 +209,6 @@ def netease_lookup(artist: str, title: str) -> dict:
         pass
     store.cache_set(key, result)
     return result
-
-
-def netease_link(artist: str, title: str) -> str:
-    return netease_lookup(artist, title).get("url", "")
 
 
 # ---------------------------------------------------------------------------
