@@ -439,10 +439,9 @@
   }
 
   function buildCSV() {
-    const rows = [["序号", "艺人", "曲目", "专辑", "来源", "网易云", "原文"]];
-    state.playlist.tracks.forEach((t, i) => {
-      rows.push([i + 1, t.artist, t.title, t.album, SOURCE_NAMES[t.source] || t.source,
-                 t.netease_url, t.source_url]);
+    const rows = [["Title", "Artist", "Album"]];
+    state.playlist.tracks.forEach((t) => {
+      rows.push([t.title, t.artist, t.album]);
     });
     return "\ufeff" + rows.map((r) => r.map(csvEscape).join(",")).join("\r\n");
   }
