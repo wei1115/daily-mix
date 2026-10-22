@@ -14,7 +14,7 @@
     kexp: "KEXP",
     pitchfork: "Pitchfork",
     allmusic: "AllMusic",
-    bandcamp: "Bandcamp Daily",
+    aquarium: "Aquarium Drunkard",
     radioparadise: "Radio Paradise",
   };
 
