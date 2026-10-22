@@ -120,6 +120,15 @@ def cache_set(key: str, payload):
 # Housekeeping
 # ---------------------------------------------------------------------------
 
+def prune_cache(max_age_days: int = 60) -> int:
+    """Drop enrichment cache rows that have aged out; keeps the DB small."""
+    cutoff = (datetime.now() - timedelta(days=max_age_days)).isoformat(timespec="seconds")
+    with _lock, closing(_connect()) as conn:
+        removed = conn.execute("DELETE FROM cache WHERE updated_at < ?", (cutoff,)).rowcount
+        conn.commit()
+    return removed
+
+
 def db_stats() -> dict:
     size = os.path.getsize(DB_PATH) if os.path.exists(DB_PATH) else 0
     with _lock, closing(_connect()) as conn:
