@@ -573,6 +573,26 @@ def fetch_blow(limit: int = 12):
 # Aggregation
 # ---------------------------------------------------------------------------
 
+PROBE_URLS = (
+    "https://streetvoice.com/",
+    "https://streetvoice.com/music/",
+    "https://bandcamp.com/tag/chinese",
+    "https://bandcamp.com/discover/chinese",
+    "https://www.streetvoice.com/music/chart/?type=song",
+)
+
+
+def probe_sources():
+    notes = []
+    for url in PROBE_URLS:
+        try:
+            raw = http_get(url, referer="https://www.google.com/")
+            notes.append(f"{url.split('/', 3)[-1][:34]}: {len(raw)}B {raw[:20]!r}")
+        except Exception as exc:  # noqa: BLE001
+            notes.append(f"{url.split('/', 3)[-1][:34]}: {str(exc)[:34]}")
+    return [], "PROBE " + " || ".join(notes)
+
+
 def fetch_all():
     candidates: list[Candidate] = []
     errors: list[str] = []
@@ -581,6 +601,7 @@ def fetch_all():
     for name, fetcher in (("kexp", fetch_kexp), ("pitchfork", fetch_pitchfork),
                           ("aquarium", fetch_aquarium), ("quietus", fetch_quietus),
                           ("soulbounce", fetch_soulbounce), ("blow", fetch_blow),
+                          ("probe", probe_sources),
                           ("radioparadise", fetch_radioparadise)):
         items, err = fetcher()
         stats[name] = len(items)
