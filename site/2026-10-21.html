@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>2026-10-21 · Soulboy</title>
-<link rel="stylesheet" href="assets/style.css?v=9ddbe3e0">
+<link rel="stylesheet" href="assets/style.css?v=4d59ec65">
 <style>
   /* 静态页没有悬停态，操作按钮常显 */
   .row-actions{opacity:1;transform:none}
@@ -447,6 +447,26 @@
         setTimeout(function () { animating = false; }, 80);
       }, 300);
     };
+    var back = function () {
+      if (animating) return;
+      animating = true;
+      front = (front - 1 + cards.length) % cards.length;
+      var card = cards[front];
+      cards.forEach(function (c, i) {
+        c.classList.toggle('is-front', i === front);
+        c.classList.toggle('is-back', i !== front);
+        c.classList.remove('leaving');
+      });
+      card.classList.add('entering');
+      void card.offsetWidth;
+      requestAnimationFrame(function () { card.classList.remove('entering'); });
+      setTimeout(function () { animating = false; }, 440);
+    };
+    deck.addEventListener('wheel', function (ev) {
+      if (Math.abs(ev.deltaY) < 4) return;
+      ev.preventDefault();
+      if (ev.deltaY > 0) swap(); else back();
+    }, { passive: false });
     deck.addEventListener('pointerdown', function (ev) {
       if (ev.target.closest('a')) return;
       startX = ev.clientX;

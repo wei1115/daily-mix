@@ -213,6 +213,11 @@ main{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:36px 40p
   transform:translate(-112%,4px) rotate(-1.2deg);
   opacity:0;
 }
+.deck-card.entering{
+  transform:translate(-104%,4px) rotate(-1.2deg);
+  opacity:0;
+  transition:none;
+}
 
 /* ---------- loading / error ---------- */
 .loading{min-height:64vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px}
