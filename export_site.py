@@ -18,6 +18,7 @@ import base64
 import hashlib
 import json
 import os
+import re
 import shutil
 import sys
 from html import escape
@@ -401,19 +402,28 @@ def _csv_cell(value: str) -> str:
     return f'"{text.replace(chr(34), chr(34) * 2)}"' if any(c in text for c in ',"\n') else text
 
 
+FEAT_RE = re.compile(r"\s+(?:feat\.?|ft\.?|featuring)\s+.*$", re.I)
+
+
+def _match_artist(artist: str) -> str:
+    """迁移工具按主艺人匹配更准，去掉 feat. 之后的部分。"""
+    return FEAT_RE.sub("", artist or "").strip()
+
+
 def write_exports(day: str, payload: dict) -> None:
     """Soundiiz 能直接识别的 CSV（英文表头）+ 可直接粘贴的纯文本清单。"""
     os.makedirs(DOWNLOAD, exist_ok=True)
     tracks = payload.get("tracks", [])
     rows = [["Title", "Artist", "Album"]]
     for track in tracks:
-        rows.append([track.get("title", ""), track.get("artist", ""), track.get("album", "")])
+        rows.append([track.get("title", ""), _match_artist(track.get("artist", "")),
+                     track.get("album", "")])
     csv_text = "\ufeff" + "\r\n".join(",".join(_csv_cell(c) for c in row) for row in rows)
     with open(os.path.join(DOWNLOAD, f"soulboy-{day}.csv"), "w",
               encoding="utf-8", newline="") as fh:
         fh.write(csv_text)
 
-    lines = [f'{t.get("artist", "")} - {t.get("title", "")}'.strip(" -")
+    lines = [f'{_match_artist(t.get("artist", ""))} - {t.get("title", "")}'.strip(" -")
              for t in tracks]
     with open(os.path.join(DOWNLOAD, f"soulboy-{day}.txt"), "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines))
