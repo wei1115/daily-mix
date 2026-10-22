@@ -453,6 +453,19 @@ def write_exports(day: str, payload: dict) -> None:
         fh.write("\n".join(lines))
 
 
+def prune_downloads(day: str) -> None:
+    """只保留最新一天的导出文件，避免站点堆积历史 CSV。"""
+    if not os.path.isdir(DOWNLOAD):
+        return
+    keep = f"soulboy-{day}"
+    for name in os.listdir(DOWNLOAD):
+        if name.startswith("soulboy-") and not name.startswith(keep):
+            try:
+                os.remove(os.path.join(DOWNLOAD, name))
+            except OSError:
+                pass
+
+
 def main():
     os.makedirs(DATA, exist_ok=True)
     os.makedirs(ASSETS, exist_ok=True)
@@ -490,6 +503,7 @@ def main():
     latest = rendered[0]
     latest_payload = load_day(latest)
     write_exports(latest, latest_payload)
+    prune_downloads(latest)
     with open(os.path.join(SITE, "index.html"), "w", encoding="utf-8") as fh:
         fh.write(render_page(latest, latest_payload, days))
 
