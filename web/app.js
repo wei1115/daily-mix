@@ -342,16 +342,8 @@
     $("dtYear").textContent = track.year || (track.released || "").slice(0, 4) || "未知";
     $("dtArtist").textContent = track.artist || "未知";
     $("dtAlbum").textContent = track.album || "未知";
-
-    const review = track.excerpt_zh || "";
-    const original = track.excerpt || "";
-    $("dtReview").textContent = review
-      || original
+    $("dtReview").textContent = track.excerpt_zh || track.excerpt
       || "这个来源没有文字乐评（电台类来源只提供曲目信息）。";
-    const label = SOURCE_NAMES[track.source] || track.source;
-    $("dtReviewSource").textContent = original
-      ? (review ? `机翻自 ${label} 原文，仅供参考` : `${label} 原文（未翻译）`)
-      : "";
   }
 
   function renderSources(playlist) {
@@ -516,8 +508,55 @@
   $("retryBtn").addEventListener("click", () => load($("archive").value || null));
   $("archive").addEventListener("change", (ev) => load(ev.target.value));
 
+  /* ---------------- 卡片堆叠 ---------------- */
+
+  function initDeck(root) {
+    if (!root) return;
+    const cards = Array.from(root.querySelectorAll(".deck-card"));
+    let front = 0;
+    let animating = false;
+    let startX = null;
+
+    const render = () => {
+      cards.forEach((card, i) => {
+        card.classList.toggle("is-front", i === front);
+        card.classList.toggle("is-back", i !== front);
+        card.classList.remove("leaving");
+      });
+    };
+
+    const swap = () => {
+      if (animating) return;
+      animating = true;
+      cards[front].classList.add("leaving");
+      setTimeout(() => {
+        front = (front + 1) % cards.length;
+        render();
+        setTimeout(() => { animating = false; }, 80);
+      }, 300);
+    };
+
+    root.addEventListener("pointerdown", (ev) => {
+      if (ev.target.closest("a")) return;
+      startX = ev.clientX;
+    });
+    root.addEventListener("pointerup", (ev) => {
+      if (startX === null) return;
+      const dx = ev.clientX - startX;
+      startX = null;
+      if (dx < -40) swap();
+    });
+    root.addEventListener("click", (ev) => {
+      const card = ev.target.closest(".deck-card");
+      if (card && card.classList.contains("is-back")) swap();
+    });
+
+    render();
+  }
+
   /* ---------------- boot ---------------- */
 
+  initDeck($("deck"));
   load(null);
   setInterval(() => {
     if (!state.playlist) return;
