@@ -88,6 +88,7 @@ def build(progress=None, force: bool = False, day: str | None = None) -> dict:
                 return cached
 
         report("fetch", 4, "正在连接 KEXP / Pitchfork / Aquarium / Quietus / SoulBounce / 吹音乐 / Radio Paradise…")
+        store.prune_cache()
         candidates, errors, stats = sources.fetch_all()
         report("fetch", 18, f"收到 {len(candidates)} 个候选")
 
