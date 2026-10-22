@@ -19,6 +19,8 @@
 不想一直开着电脑，就把生成放到云端：GitHub Actions 每天跑一次，Cloudflare Pages 托管，
 手机打开固定地址即可，电脑关机也不影响。
 
+线上地址：**https://fm.soulboy.asia**（备用 `https://daily-mix.pages.dev`）
+
 ```bash
 python export_site.py          # 本地试渲染，产物在 site/
 ```
