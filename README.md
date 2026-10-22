@@ -35,6 +35,7 @@ python export_site.py          # 本地试渲染，产物在 site/
 | [Pitchfork](https://pitchfork.com/reviews/best/albums/) | 最佳新专辑 | 取榜单条目，再用单篇页的 `og:title` 解析「艺人: 专辑」 |
 | [Aquarium Drunkard](https://aquariumdrunkard.com/) | 编辑推荐专辑 | RSS 标题是「艺人 :: 专辑」，云端可访问 |
 | [The Quietus](https://thequietus.com/) | 深度乐评专辑 | RSS 标题格式不统一，解析时会剥掉「Album Review:」这类前缀 |
+| [SoulBounce](https://soulbounce.com/) | R&B / Soul 专辑 | 标题是句子，按「艺人 + 引号专辑名」启发式提取 |
 | [Radio Paradise](https://radioparadise.com/) | 6 个频道的正在播放 | 人工编排、无广告，跨年代选曲 |
 
 专辑类来源会通过 iTunes Search 解析出一首代表曲目，同时拿到封面。
