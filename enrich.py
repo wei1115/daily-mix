@@ -8,6 +8,7 @@ SQLite so a daily rebuild is cheap.
 from __future__ import annotations
 
 import difflib
+import hashlib
 import json
 import re
 import threading
@@ -15,7 +16,7 @@ import time
 import urllib.parse
 
 import store
-from sources import FetchError, http_json
+from sources import FetchError, http_get, http_json
 
 GAP_ITUNES = 0.8
 GAP_OTHER = 0.20
@@ -207,6 +208,48 @@ def netease_lookup(artist: str, title: str) -> dict:
 
 def netease_link(artist: str, title: str) -> str:
     return netease_lookup(artist, title).get("url", "")
+
+
+# ---------------------------------------------------------------------------
+# Translation (review excerpt → Chinese), cached per source string
+# ---------------------------------------------------------------------------
+
+def _mymemory(text: str) -> str:
+    url = ("https://api.mymemory.translated.net/get?langpair=en|zh-CN&q="
+           + urllib.parse.quote(text))
+    data = http_json(url)
+    translated = ((data.get("responseData") or {}).get("translatedText") or "").strip()
+    return "" if translated.upper().startswith("MYMEMORY WARNING") else translated
+
+
+def _gtranslate(text: str) -> str:
+    url = ("https://translate.googleapis.com/translate_a/single?client=gtx"
+           "&sl=en&tl=zh-CN&dt=t&q=" + urllib.parse.quote(text))
+    raw = http_json(url)
+    if isinstance(raw, list) and raw and isinstance(raw[0], list):
+        return "".join(part[0] for part in raw[0] if isinstance(part, list) and part)
+    return ""
+
+
+def translate_zh(text: str) -> str:
+    text = (text or "").strip()
+    if not text:
+        return ""
+    key = "zh:" + hashlib.sha1(text.encode("utf-8")).hexdigest()
+    cached = store.cache_get(key, max_age_days=180)
+    if cached is not None:
+        return cached.get("text", "")
+
+    out = ""
+    for fn in (_mymemory, _gtranslate):
+        try:
+            out = fn(text)
+        except Exception:  # noqa: BLE001
+            out = ""
+        if out:
+            break
+    store.cache_set(key, {"text": out})
+    return out
 
 
 # ---------------------------------------------------------------------------
