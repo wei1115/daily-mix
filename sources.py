@@ -476,6 +476,74 @@ def fetch_soulbounce(limit: int = 6):
 
 
 # ---------------------------------------------------------------------------
+# Blow 吹音乐 — 华语乐评（繁体）；专辑名用《》标记
+# ---------------------------------------------------------------------------
+
+BLOW_ALBUM = re.compile(r"《([^》]{1,60})》")
+BLOW_VERB = re.compile(r"(推出|發行|發布|发行|將推出|宣布|帶來|带来|攜|带著|帶著|全新|首張|首张)")
+BLOW_DESC = re.compile(
+    r".*(?:團體|团体|成員|成员|樂團|乐团|歌手|音樂人|音乐人|創作人|创作人|團長|团长|新團|新团)\s*")
+BLOW_TAIL = re.compile(r"[ 　]*(?:推出|發行|發布|发行|帶來|带来|宣布|將推出|首張|首张|全新)+$")
+BLOW_SKIP = ("演唱會", "巡演", "音樂節", "音乐节", "得獎", "入圍", "入圍名單", "名單", "門票", "开卖", "開賣")
+
+
+def _blow_parse(title: str) -> tuple[str, str]:
+    """从「…推出專輯《X》」里拆出 (艺人, 专辑)。"""
+    match = BLOW_ALBUM.search(title)
+    if not match:
+        return "", ""
+    album = match.group(1).strip()
+    head = title[:match.start()].strip()
+
+    verb = None
+    for verb in BLOW_VERB.finditer(head):
+        pass
+    if verb:
+        head = head[:verb.start()].strip()
+
+    desc = BLOW_DESC.match(head)
+    if desc:
+        head = head[desc.end():].strip()
+
+    artist = head.strip(" ｜|！!，,、-—：:「」『』\"'")
+    artist = BLOW_TAIL.sub("", artist).strip()
+    return artist, album
+
+
+def fetch_blow(limit: int = 6):
+    out: list[Candidate] = []
+    try:
+        raw = http_get("https://blow.streetvoice.com/feed/",
+                       referer="https://blow.streetvoice.com/")
+    except Exception as exc:  # noqa: BLE001
+        return out, f"Blow: {exc}"
+
+    for title, link, desc in _rss_entries(raw):
+        if len(out) >= limit:
+            break
+        if not title or not link:
+            continue
+        if any(word in title for word in BLOW_SKIP):
+            continue
+        artist, album = _blow_parse(title)
+        if not artist or not album:
+            continue
+        out.append(Candidate(
+            artist=artist,
+            title="",
+            album=album,
+            source="blow",
+            source_label="吹音乐 Blow",
+            source_url=link,
+            context="吹音乐 华语推荐",
+            excerpt=desc,
+            score=4.0,
+            kind="album",
+        ))
+    return out, (None if out else "Blow: 0 matched")
+
+
+# ---------------------------------------------------------------------------
 # Aggregation
 # ---------------------------------------------------------------------------
 
@@ -486,7 +554,7 @@ def fetch_all():
 
     for name, fetcher in (("kexp", fetch_kexp), ("pitchfork", fetch_pitchfork),
                           ("aquarium", fetch_aquarium), ("quietus", fetch_quietus),
-                          ("soulbounce", fetch_soulbounce),
+                          ("soulbounce", fetch_soulbounce), ("blow", fetch_blow),
                           ("radioparadise", fetch_radioparadise)):
         items, err = fetcher()
         stats[name] = len(items)
