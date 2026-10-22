@@ -39,6 +39,7 @@ SOURCE_NAMES = {
     "pitchfork": "Pitchfork",
     "allmusic": "AllMusic",
     "aquarium": "Aquarium Drunkard",
+    "quietus": "The Quietus",
     "radioparadise": "Radio Paradise",
 }
 
