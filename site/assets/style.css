@@ -188,6 +188,32 @@ main{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:36px 40p
 .source-list a{color:var(--text);text-decoration:none}
 .source-list a:hover{color:var(--accent)}
 
+/* ---------- 封面 / 信息卡：错位堆叠 ---------- */
+.deck{
+  display:grid;
+  padding:0 16px 16px 0;      /* 给底下那张卡露出的边留位置 */
+  touch-action:pan-y;
+}
+.deck-card{
+  grid-area:1/1;
+  border-radius:var(--radius);
+  transition:transform .42s cubic-bezier(.22,.8,.3,1),opacity .3s ease;
+  will-change:transform;
+  cursor:grab;
+}
+.deck-card:active{cursor:grabbing}
+.deck-card > *{transition:opacity .22s ease}
+.deck-card.is-front{transform:translate(0,0);z-index:2}
+.deck-card.is-back{
+  transform:translate(16px,16px) scale(.98);
+  z-index:1;
+}
+.deck-card.is-back > *{opacity:0}          /* 只露底色，不显示内容 */
+.deck-card.leaving{
+  transform:translate(-112%,4px) rotate(-1.2deg);
+  opacity:0;
+}
+
 /* ---------- loading / error ---------- */
 .loading{min-height:64vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px}
 .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--muted-dim);margin:0}
@@ -200,17 +226,20 @@ main{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:36px 40p
 .error-state h2{font-family:var(--serif);font-weight:400;font-size:30px;margin:6px 0 0}
 
 /* ---------- 曲目信息 ---------- */
-.facts{margin:0;display:flex;flex-direction:column;gap:9px}
-.facts div{display:flex;gap:12px;font-size:12.5px;line-height:1.6}
+.facts{margin:0;display:flex;flex-direction:column;gap:10px}
+.facts div{display:flex;gap:12px;line-height:1.55}
 .facts dt{
   flex:0 0 34px;color:var(--muted-dim);
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;padding-top:1px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding-top:3px;
 }
-.facts dd{margin:0;color:var(--text);min-width:0;word-break:break-word}
-.review-label{margin:18px 0 8px}
+.facts dd{
+  margin:0;color:var(--text);min-width:0;word-break:break-word;
+  font-family:var(--serif);font-size:13.5px;letter-spacing:.01em;
+}
+.review-label{margin:20px 0 9px}
 .review-text{
-  margin:0;font-size:12.5px;line-height:1.75;color:var(--muted);
-  white-space:pre-wrap;
+  margin:0;font-family:var(--serif);font-size:13.5px;line-height:1.85;
+  color:#c9c4bb;white-space:pre-wrap;
 }
 
 /* ---------- toast ---------- */

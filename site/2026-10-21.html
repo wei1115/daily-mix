@@ -313,30 +313,31 @@
     </div>
 
     <aside class="col-side">
-      <div class="card pick-card">
-        <p class="card-label" id="pickLabel">今日主打</p>
-        <div class="pick-cover"><img id="pickImg" src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/20/2f/61/202f61ac-e57b-212a-3333-8122000e9015/66806.jpg/600x600bb.jpg" alt="" referrerpolicy="no-referrer"></div>
-        <h2 class="pick-artist" id="pickArtist">Imperial Teen</h2>
-        <p class="pick-album" id="pickAlbum">All Over You</p>
-        <p class="pick-context" id="pickContext">KEXP 播出 · 10-21 16:00</p>
-        <div class="pick-actions">
-          <a class="chip" id="pickNetease" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMzM5NTA3MzQ2MiIsImNtZCI6InBsYXkifQ==">在客户端播放</a>
-          <a class="chip" id="pickWeb" href="https://music.163.com/song?id=3395073462" target="_blank" rel="noopener">网页版</a>
+      <div class="deck" id="deck">
+        <div class="card pick-card deck-card is-front">
+          <p class="card-label" id="pickLabel">今日主打</p>
+          <div class="pick-cover"><img id="pickImg" src="https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/20/2f/61/202f61ac-e57b-212a-3333-8122000e9015/66806.jpg/600x600bb.jpg" alt="" referrerpolicy="no-referrer"></div>
+          <h2 class="pick-artist" id="pickArtist">Imperial Teen</h2>
+          <p class="pick-album" id="pickAlbum">All Over You</p>
+          <p class="pick-context" id="pickContext">KEXP 播出 · 10-21 16:00</p>
+          <div class="pick-actions">
+            <a class="chip" id="pickNetease" href="orpheus://eyJ0eXBlIjoic29uZyIsImlkIjoiMzM5NTA3MzQ2MiIsImNtZCI6InBsYXkifQ==">在客户端播放</a>
+            <a class="chip" id="pickWeb" href="https://music.163.com/song?id=3395073462" target="_blank" rel="noopener">网页版</a>
+          </div>
+          <a class="source-link" id="pickSource" href="https://www.kexp.org/" target="_blank" rel="noopener">→ 查看原文</a>
         </div>
-        <a class="source-link" id="pickSource" href="https://www.kexp.org/" target="_blank" rel="noopener">→ 查看原文</a>
-      </div>
 
-      <div class="card detail-card">
-        <p class="card-label">曲目信息</p>
-        <dl class="facts">
-          <div><dt>风格</dt><dd id="dtGenre">Alternative</dd></div>
-          <div><dt>年代</dt><dd id="dtYear">未知</dd></div>
-          <div><dt>艺人</dt><dd id="dtArtist">Imperial Teen</dd></div>
-          <div><dt>专辑</dt><dd id="dtAlbum">All Over You</dd></div>
-        </dl>
-        <p class="card-label review-label">收录网站乐评</p>
-        <p id="dtReview" class="review-text">这个来源没有文字乐评（电台类来源只提供曲目信息）。</p>
-        <p id="dtReviewSource" class="hint"></p>
+        <div class="card detail-card deck-card is-back">
+          <p class="card-label">曲目信息</p>
+          <dl class="facts">
+            <div><dt>风格</dt><dd id="dtGenre">Alternative</dd></div>
+            <div><dt>年代</dt><dd id="dtYear">未知</dd></div>
+            <div><dt>艺人</dt><dd id="dtArtist">Imperial Teen</dd></div>
+            <div><dt>专辑</dt><dd id="dtAlbum">All Over You</dd></div>
+          </dl>
+          <p class="card-label review-label">收录网站乐评</p>
+          <p id="dtReview" class="review-text">这个来源没有文字乐评（电台类来源只提供曲目信息）。</p>
+        </div>
       </div>
 
       <div class="card">
@@ -369,8 +370,7 @@
     year: document.getElementById('dtYear'),
     dtArtist: document.getElementById('dtArtist'),
     dtAlbum: document.getElementById('dtAlbum'),
-    review: document.getElementById('dtReview'),
-    reviewSource: document.getElementById('dtReviewSource')
+    review: document.getElementById('dtReview')
   };
   function select(row) {
     rows.forEach(function (r) { r.classList.remove('selected'); });
@@ -412,9 +412,6 @@
     pick.dtAlbum.textContent = row.dataset.album || '未知';
     pick.review.textContent = row.dataset.review
       || '这个来源没有文字乐评（电台类来源只提供曲目信息）。';
-    pick.reviewSource.textContent = row.dataset.hasExcerpt
-      ? '机翻自 ' + (row.dataset.sourceName || '') + ' 原文，仅供参考'
-      : '';
   }
   rows.forEach(function (row) {
     row.addEventListener('click', function (ev) {
@@ -422,6 +419,45 @@
       select(row);
     });
   });
+
+  /* 卡片堆叠：左滑或点露出的底卡切换 */
+  var deck = document.getElementById('deck');
+  if (deck) {
+    var cards = Array.prototype.slice.call(deck.querySelectorAll('.deck-card'));
+    var front = 0, animating = false, startX = null;
+    var renderDeck = function () {
+      cards.forEach(function (card, i) {
+        card.classList.toggle('is-front', i === front);
+        card.classList.toggle('is-back', i !== front);
+        card.classList.remove('leaving');
+      });
+    };
+    var swap = function () {
+      if (animating) return;
+      animating = true;
+      cards[front].classList.add('leaving');
+      setTimeout(function () {
+        front = (front + 1) % cards.length;
+        renderDeck();
+        setTimeout(function () { animating = false; }, 80);
+      }, 300);
+    };
+    deck.addEventListener('pointerdown', function (ev) {
+      if (ev.target.closest('a')) return;
+      startX = ev.clientX;
+    });
+    deck.addEventListener('pointerup', function (ev) {
+      if (startX === null) return;
+      var dx = ev.clientX - startX;
+      startX = null;
+      if (dx < -40) swap();
+    });
+    deck.addEventListener('click', function (ev) {
+      var card = ev.target.closest('.deck-card');
+      if (card && card.classList.contains('is-back')) swap();
+    });
+    renderDeck();
+  }
 })();
 </script>
 </body>
