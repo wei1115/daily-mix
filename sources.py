@@ -573,34 +573,6 @@ def fetch_blow(limit: int = 12):
 # Aggregation
 # ---------------------------------------------------------------------------
 
-PROBE_URLS = (
-    "https://streetvoice.com/api/v2/songs/",
-    "https://streetvoice.com/api/v4/songs/?limit=5",
-    "https://streetvoice.com/api/v2/song/",
-)
-
-
-def probe_sources():
-    notes = []
-    try:
-        raw = http_get("https://streetvoice.com/music/", referer="https://www.google.com/")
-        text = raw.decode("utf-8", "replace")
-        idx = text.find("api/v")
-        notes.append(f"html={len(text)} next={'__NEXT_DATA__' in text} "
-                     f"nuxt={'__NUXT__' in text} api_at={idx}")
-        if idx > 0:
-            notes.append("snippet=" + text[max(0, idx - 60):idx + 80].replace("\n", " ")[:140])
-    except Exception as exc:  # noqa: BLE001
-        notes.append(f"home: {str(exc)[:40]}")
-    for url in PROBE_URLS:
-        try:
-            raw = http_get(url, referer="https://streetvoice.com/")
-            notes.append(f"{url.split('/api/')[-1]}: {len(raw)}B {raw[:60]!r}")
-        except Exception as exc:  # noqa: BLE001
-            notes.append(f"{url.split('/api/')[-1]}: {str(exc)[:34]}")
-    return [], "PROBE " + " || ".join(notes)
-
-
 def fetch_all():
     candidates: list[Candidate] = []
     errors: list[str] = []
@@ -609,7 +581,6 @@ def fetch_all():
     for name, fetcher in (("kexp", fetch_kexp), ("pitchfork", fetch_pitchfork),
                           ("aquarium", fetch_aquarium), ("quietus", fetch_quietus),
                           ("soulbounce", fetch_soulbounce), ("blow", fetch_blow),
-                          ("probe", probe_sources),
                           ("radioparadise", fetch_radioparadise)):
         items, err = fetcher()
         stats[name] = len(items)
