@@ -370,50 +370,63 @@ def _bandcamp_entries(raw: bytes):
         yield _clean(title), link
 
 
+BANDCAMP_FEEDS = (
+    "https://daily.bandcamp.com/feed",
+    "https://daily.bandcamp.com/feed/",
+    "https://daily.bandcamp.com/rss",
+    "https://bandcamp.com/feed",
+)
+
+
 def fetch_bandcamp(limit: int = 8):
     out: list[Candidate] = []
-    try:
-        raw = http_get("https://daily.bandcamp.com/feed",
-                       referer="https://daily.bandcamp.com/")
-    except Exception as exc:  # noqa: BLE001
-        return out, f"Bandcamp: {exc}"
+    diag = []
+    for url in BANDCAMP_FEEDS:
+        try:
+            raw = http_get(url, referer="https://daily.bandcamp.com/")
+        except Exception as exc:  # noqa: BLE001
+            diag.append(f"{url}: {exc}")
+            continue
 
-    entries = list(_bandcamp_entries(raw))
-    for title, link in entries:
-        if len(out) >= limit:
-            break
-        if not title or not link:
+        entries = list(_bandcamp_entries(raw))
+        if not entries:
+            head = raw[:40].decode("utf-8", "replace").replace("\n", " ")
+            diag.append(f"{url}: html={head!r}")
             continue
-        if any(word in title.lower() for word in BANDCAMP_SKIP):
-            continue
-        match = BANDCAMP_TITLE.match(title)
-        if not match:
-            continue
-        artist, album = match.group(1).strip(), match.group(2).strip()
-        if not artist or not album:
-            continue
-        out.append(Candidate(
-            artist=artist,
-            title="",
-            album=album,
-            source="bandcamp",
-            source_label="Bandcamp Daily",
-            source_url=link,
-            context="Bandcamp Daily 编辑推荐",
-            score=4.1,
-            kind="album",
-        ))
-        if len(out) >= limit:
-            break
 
-    if out:
-        return out, None
-    if entries:
+        for title, link in entries:
+            if len(out) >= limit:
+                break
+            if not title or not link:
+                continue
+            if any(word in title.lower() for word in BANDCAMP_SKIP):
+                continue
+            match = BANDCAMP_TITLE.match(title)
+            if not match:
+                continue
+            artist, album = match.group(1).strip(), match.group(2).strip()
+            if not artist or not album:
+                continue
+            out.append(Candidate(
+                artist=artist,
+                title="",
+                album=album,
+                source="bandcamp",
+                source_label="Bandcamp Daily",
+                source_url=link,
+                context="Bandcamp Daily 编辑推荐",
+                score=4.1,
+                kind="album",
+            ))
+            if len(out) >= limit:
+                break
+
+        if out:
+            return out, None
         sample = next((t for t, _ in entries if t), "")
-        return out, (f"Bandcamp: 0 matched of {len(entries)} items; "
-                     f"sample={sample[:60]!r}")
-    head = raw[:60].decode("utf-8", "replace")
-    return out, f"Bandcamp: no <item> in response; head={head!r}"
+        diag.append(f"{url}: 0 matched of {len(entries)}, sample={sample[:50]!r}")
+
+    return out, "Bandcamp: " + " | ".join(diag)
 
 
 # ---------------------------------------------------------------------------
