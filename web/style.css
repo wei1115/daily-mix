@@ -199,6 +199,20 @@ main{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:36px 40p
 .error-state{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center}
 .error-state h2{font-family:var(--serif);font-weight:400;font-size:30px;margin:6px 0 0}
 
+/* ---------- 曲目信息 ---------- */
+.facts{margin:0;display:flex;flex-direction:column;gap:9px}
+.facts div{display:flex;gap:12px;font-size:12.5px;line-height:1.6}
+.facts dt{
+  flex:0 0 34px;color:var(--muted-dim);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;padding-top:1px;
+}
+.facts dd{margin:0;color:var(--text);min-width:0;word-break:break-word}
+.review-label{margin:18px 0 8px}
+.review-text{
+  margin:0;font-size:12.5px;line-height:1.75;color:var(--muted);
+  white-space:pre-wrap;
+}
+
 /* ---------- toast ---------- */
 .toast{
   position:fixed;left:50%;bottom:36px;transform:translate(-50%,14px);
