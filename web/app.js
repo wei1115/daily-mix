@@ -438,10 +438,13 @@
     return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   }
 
+  const FEAT_RE = /\s+(?:feat\.?|ft\.?|featuring)\s+.*$/i;
+  const matchArtist = (artist) => String(artist || "").replace(FEAT_RE, "").trim();
+
   function buildCSV() {
     const rows = [["Title", "Artist", "Album"]];
     state.playlist.tracks.forEach((t) => {
-      rows.push([t.title, t.artist, t.album]);
+      rows.push([t.title, matchArtist(t.artist), t.album]);
     });
     return "\ufeff" + rows.map((r) => r.map(csvEscape).join(",")).join("\r\n");
   }
