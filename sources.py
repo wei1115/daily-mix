@@ -14,6 +14,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 
@@ -346,6 +347,57 @@ def fetch_allmusic(limit: int = 10):
 
 
 # ---------------------------------------------------------------------------
+# Bandcamp Daily — editorial feed; album picks look like: Artist, "Album"
+# ---------------------------------------------------------------------------
+
+BANDCAMP_SKIP = (
+    "picks", "interview", "guide", "scene report", "the story of",
+    "how ", "why ", "what ", "listen to", "best ", "essential",
+)
+
+# 艺人, “专辑” / 艺人, ‘专辑’ / 艺人, "专辑"
+BANDCAMP_TITLE = re.compile(r"^(.{2,90}?),\s*[“”\"‘’'](.{2,120}?)[“”\"‘’']\s*$")
+
+
+def fetch_bandcamp(limit: int = 8):
+    out: list[Candidate] = []
+    try:
+        raw = http_get("https://daily.bandcamp.com/feed",
+                       referer="https://daily.bandcamp.com/")
+        root = ET.fromstring(raw)
+    except Exception as exc:  # noqa: BLE001
+        return out, f"Bandcamp: {exc}"
+
+    for item in root.findall(".//item")[:limit * 3]:
+        title = _clean(item.findtext("title") or "")
+        link = (item.findtext("link") or "").strip()
+        if not title or not link:
+            continue
+        if any(word in title.lower() for word in BANDCAMP_SKIP):
+            continue
+        match = BANDCAMP_TITLE.match(title)
+        if not match:
+            continue
+        artist, album = match.group(1).strip(), match.group(2).strip()
+        if not artist or not album:
+            continue
+        out.append(Candidate(
+            artist=artist,
+            title="",
+            album=album,
+            source="bandcamp",
+            source_label="Bandcamp Daily",
+            source_url=link,
+            context="Bandcamp Daily 编辑推荐",
+            score=4.1,
+            kind="album",
+        ))
+        if len(out) >= limit:
+            break
+    return out, None
+
+
+# ---------------------------------------------------------------------------
 # Aggregation
 # ---------------------------------------------------------------------------
 
@@ -355,7 +407,8 @@ def fetch_all():
     stats: dict[str, int] = {}
 
     for name, fetcher in (("kexp", fetch_kexp), ("pitchfork", fetch_pitchfork),
-                          ("allmusic", fetch_allmusic), ("radioparadise", fetch_radioparadise)):
+                          ("allmusic", fetch_allmusic), ("bandcamp", fetch_bandcamp),
+                          ("radioparadise", fetch_radioparadise)):
         items, err = fetcher()
         stats[name] = len(items)
         candidates.extend(items)
