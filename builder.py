@@ -139,7 +139,11 @@ def build(progress=None, force: bool = False, day: str | None = None) -> dict:
         if not selected:
             raise RuntimeError("候选曲目都没能补全信息（封面/链接），稍后再试。")
 
-        report("order", 92, "正在编排顺序…")
+        report("order", 92, "正在翻译乐评…")
+        for c in selected:
+            if c.excerpt:
+                c.excerpt_zh = enrich.translate_zh(c.excerpt)
+
         tracks = [{
             "key": _key(c.artist, c.title),
             "artist": c.artist,
@@ -150,9 +154,12 @@ def build(progress=None, force: bool = False, day: str | None = None) -> dict:
             "source_url": c.source_url,
             "context": c.context,
             "released": c.released,
+            "year": (c.released or "")[:4],
             "genre": c.genre,
             "artwork": c.artwork,
             "netease_url": c.netease_url,
+            "excerpt": c.excerpt,
+            "excerpt_zh": c.excerpt_zh,
             "score": round(c.score, 2),
         } for c in selected]
 
