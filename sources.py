@@ -451,6 +451,30 @@ def fetch_bandcamp(limit: int = 8):
 # Aggregation
 # ---------------------------------------------------------------------------
 
+PROBE_URLS = (
+    "https://aquariumdrunkard.com/feed/",
+    "https://www.gorillavsbear.net/feed/",
+    "https://thequietus.com/feed",
+    "https://www.stereogum.com/feed/",
+    "https://www.brooklynvegan.com/feed/",
+    "https://daily.bandcamp.com/feed",
+    "https://www.allmusic.com/newreleases",
+)
+
+
+def probe_sources():
+    """Temporary diagnostic: report which candidate feeds are reachable."""
+    notes = []
+    for url in PROBE_URLS:
+        try:
+            raw = http_get(url, referer="https://www.google.com/")
+            head = raw[:30].decode("utf-8", "replace").replace("\n", " ")
+            notes.append(f"{url.split('/')[2]}: {len(raw)}B {head!r}")
+        except Exception as exc:  # noqa: BLE001
+            notes.append(f"{url.split('/')[2]}: {str(exc)[:40]}")
+    return [], "PROBE " + " || ".join(notes)
+
+
 def fetch_all():
     candidates: list[Candidate] = []
     errors: list[str] = []
@@ -458,7 +482,7 @@ def fetch_all():
 
     for name, fetcher in (("kexp", fetch_kexp), ("pitchfork", fetch_pitchfork),
                           ("allmusic", fetch_allmusic), ("bandcamp", fetch_bandcamp),
-                          ("radioparadise", fetch_radioparadise)):
+                          ("radioparadise", fetch_radioparadise), ("probe", probe_sources)):
         items, err = fetcher()
         stats[name] = len(items)
         candidates.extend(items)
