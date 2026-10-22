@@ -337,6 +337,21 @@
       web.href = "#";
       web.classList.add("disabled");
     }
+
+    $("dtGenre").textContent = track.genre || "未知";
+    $("dtYear").textContent = track.year || (track.released || "").slice(0, 4) || "未知";
+    $("dtArtist").textContent = track.artist || "未知";
+    $("dtAlbum").textContent = track.album || "未知";
+
+    const review = track.excerpt_zh || "";
+    const original = track.excerpt || "";
+    $("dtReview").textContent = review
+      || original
+      || "这个来源没有文字乐评（电台类来源只提供曲目信息）。";
+    const label = SOURCE_NAMES[track.source] || track.source;
+    $("dtReviewSource").textContent = original
+      ? (review ? `机翻自 ${label} 原文，仅供参考` : `${label} 原文（未翻译）`)
+      : "";
   }
 
   function renderSources(playlist) {
