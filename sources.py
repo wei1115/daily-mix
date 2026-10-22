@@ -76,6 +76,8 @@ class Candidate:
     artwork: str = ""
     netease_url: str = ""
     genre: str = ""
+    excerpt: str = ""            # 来源站原文摘要（英文）
+    excerpt_zh: str = ""         # 机器翻译后的中文
     kind: str = "track"          # "track" (ready) or "album" (needs resolving)
 
 
@@ -263,6 +265,9 @@ def fetch_pitchfork(limit: int = 8):
             m = re.search(r'<meta property="og:title" content="([^"]+)"', page)
             title = html.unescape(m.group(1)) if m else name
             img = re.search(r'<meta property="og:image" content="([^"]+)"', page)
+            desc_m = (re.search(r'<meta name="description" content="([^"]*)"', page)
+                      or re.search(r'<meta property="og:description" content="([^"]*)"', page))
+            excerpt = _clean(html.unescape(desc_m.group(1))) if desc_m else ""
             artist, album = "", title
             if ": " in title:
                 artist, album = title.split(": ", 1)
@@ -275,6 +280,7 @@ def fetch_pitchfork(limit: int = 8):
                 source_url=url,
                 context="Pitchfork 最佳新专辑",
                 artwork=_clean(img.group(1)) if img else "",
+                excerpt=excerpt[:400],
                 score=4.4,
                 kind="album",
             ))
@@ -305,7 +311,11 @@ def _rss_entries(raw: bytes):
         title = re.sub(r"^\s*<!\[CDATA\[(.*?)\]\]>\s*$", r"\1", title, flags=re.S)
         link_m = re.search(r"<link>(.*?)</link>", chunk, re.S | re.I)
         link = (link_m.group(1) if link_m else "").strip()
-        yield _clean(title), link
+        desc_m = re.search(r"<description>(.*?)</description>", chunk, re.S | re.I)
+        desc = desc_m.group(1) if desc_m else ""
+        desc = re.sub(r"^\s*<!\[CDATA\[(.*?)\]\]>\s*$", r"\1", desc, flags=re.S)
+        desc = _clean(re.sub(r"<[^>]+>", " ", html.unescape(desc)))
+        yield _clean(title), link, desc[:400]
 
 
 def fetch_aquarium(limit: int = 6):
@@ -316,7 +326,7 @@ def fetch_aquarium(limit: int = 6):
     except Exception as exc:  # noqa: BLE001
         return out, f"Aquarium: {exc}"
 
-    for title, link in _rss_entries(raw):
+    for title, link, desc in _rss_entries(raw):
         if len(out) >= limit:
             break
         if not title or not link:
@@ -337,6 +347,7 @@ def fetch_aquarium(limit: int = 6):
             source_label="Aquarium Drunkard",
             source_url=link,
             context="Aquarium Drunkard 推荐",
+            excerpt=desc,
             score=4.0,
             kind="album",
         ))
@@ -368,7 +379,7 @@ def fetch_quietus(limit: int = 5):
         return out, f"Quietus: {exc}"
 
     samples = []
-    for title, link in _rss_entries(raw):
+    for title, link, desc in _rss_entries(raw):
         if len(out) >= limit:
             break
         if not title or not link:
@@ -392,6 +403,7 @@ def fetch_quietus(limit: int = 5):
             source_label="The Quietus",
             source_url=link,
             context="The Quietus 乐评",
+            excerpt=desc,
             score=4.2,
             kind="album",
         ))
@@ -437,7 +449,7 @@ def fetch_soulbounce(limit: int = 6):
     except Exception as exc:  # noqa: BLE001
         return out, f"SoulBounce: {exc}"
 
-    for title, link in _rss_entries(raw):
+    for title, link, desc in _rss_entries(raw):
         if len(out) >= limit:
             break
         if not title or not link:
@@ -456,6 +468,7 @@ def fetch_soulbounce(limit: int = 6):
             source_label="SoulBounce",
             source_url=link,
             context="SoulBounce R&B 推荐",
+            excerpt=desc,
             score=3.9,
             kind="album",
         ))
