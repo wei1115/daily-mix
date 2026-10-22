@@ -158,6 +158,8 @@ def build(progress=None, force: bool = False, day: str | None = None) -> dict:
             "genre": c.genre,
             "artwork": c.artwork,
             "netease_url": c.netease_url,
+            "netease_title": c.netease_title,
+            "netease_artist": c.netease_artist,
             "excerpt": c.excerpt,
             "excerpt_zh": c.excerpt_zh,
             "score": round(c.score, 2),
