@@ -15,7 +15,7 @@ import store
 TARGET = 25
 MAX_ATTEMPTS = 110
 SOURCE_CAPS = {"kexp": 12, "pitchfork": 5, "aquarium": 4,
-               "quietus": 4, "soulbounce": 4, "blow": 4, "radioparadise": 5}
+               "quietus": 4, "soulbounce": 4, "blow": 6, "radioparadise": 5}
 GENRE_CAP = 4
 LOOKBACK_DAYS = 14
 ALBUM_LOOKBACK_DAYS = 2
