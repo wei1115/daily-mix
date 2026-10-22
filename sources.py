@@ -346,20 +346,19 @@ def fetch_allmusic(limit: int = 10):
 
 
 # ---------------------------------------------------------------------------
-# Bandcamp Daily — editorial feed; album picks look like: Artist, "Album"
+# Aquarium Drunkard — editorial album picks titled "Artist :: Album"
 # ---------------------------------------------------------------------------
 
-BANDCAMP_SKIP = (
-    "picks", "interview", "guide", "scene report", "the story of",
-    "how ", "why ", "what ", "listen to", "best ", "essential",
+AQUARIUM_SKIP = (
+    "interview", "transmissions", "the aquarium drunkard show", "introducing",
+    "rfad", "podcast", "mixtape", "radio free",
 )
 
-# 艺人, “专辑” / 艺人, ‘专辑’ / 艺人, "专辑"
-BANDCAMP_TITLE = re.compile(r"^(.{2,90}?),\s*[“”\"‘’'](.{2,120}?)[“”\"‘’']\s*$")
+AQUARIUM_TITLE = re.compile(r"^(.{2,90}?)\s*::\s*(.{2,120})$")
 
 
-def _bandcamp_entries(raw: bytes):
-    """Feed is occasionally malformed; use a tolerant regex scan instead of XML."""
+def _rss_entries(raw: bytes):
+    """Tolerant RSS <item> scan (some feeds are not well-formed XML)."""
     text = raw.decode("utf-8", "replace")
     for chunk in re.findall(r"<item\b[^>]*>(.*?)</item>", text, re.S | re.I):
         title_m = re.search(r"<title>(.*?)</title>", chunk, re.S | re.I)
@@ -370,110 +369,44 @@ def _bandcamp_entries(raw: bytes):
         yield _clean(title), link
 
 
-def _bandcamp_html_entries(raw: bytes):
-    """Datacenter IPs get the HTML page instead of RSS; scrape article links."""
-    text = raw.decode("utf-8", "replace")
-    seen = set()
-    for href, label in re.findall(
-            r'<a[^>]+href="([^"]*(?:article|album-of-the-day)[^"]*)"[^>]*>(.*?)</a>',
-            text, re.S | re.I):
-        title = _clean(re.sub(r"<[^>]+>", " ", label))
-        if not title or title in seen:
-            continue
-        seen.add(title)
-        if href.startswith("/"):
-            href = "https://daily.bandcamp.com" + href
-        yield title, href
-
-
-BANDCAMP_FEEDS = (
-    "https://daily.bandcamp.com/feed",
-    "https://daily.bandcamp.com/feed/",
-    "https://daily.bandcamp.com/rss",
-    "https://bandcamp.com/feed",
-)
-
-
-def fetch_bandcamp(limit: int = 8):
+def fetch_aquarium(limit: int = 6):
     out: list[Candidate] = []
-    diag = []
-    for url in BANDCAMP_FEEDS:
-        try:
-            raw = http_get(url, referer="https://daily.bandcamp.com/")
-        except Exception as exc:  # noqa: BLE001
-            diag.append(f"{url}: {exc}")
+    try:
+        raw = http_get("https://aquariumdrunkard.com/feed/",
+                       referer="https://aquariumdrunkard.com/")
+    except Exception as exc:  # noqa: BLE001
+        return out, f"Aquarium: {exc}"
+
+    for title, link in _rss_entries(raw):
+        if len(out) >= limit:
+            break
+        if not title or not link:
             continue
-
-        entries = list(_bandcamp_entries(raw))
-        if not entries:
-            entries = list(_bandcamp_html_entries(raw))
-        if not entries:
-            head = raw[:40].decode("utf-8", "replace").replace("\n", " ")
-            diag.append(f"{url}: no entries, head={head!r}")
+        if any(word in title.lower() for word in AQUARIUM_SKIP):
             continue
-
-        for title, link in entries:
-            if len(out) >= limit:
-                break
-            if not title or not link:
-                continue
-            if any(word in title.lower() for word in BANDCAMP_SKIP):
-                continue
-            match = BANDCAMP_TITLE.match(title)
-            if not match:
-                continue
-            artist, album = match.group(1).strip(), match.group(2).strip()
-            if not artist or not album:
-                continue
-            out.append(Candidate(
-                artist=artist,
-                title="",
-                album=album,
-                source="bandcamp",
-                source_label="Bandcamp Daily",
-                source_url=link,
-                context="Bandcamp Daily 编辑推荐",
-                score=4.1,
-                kind="album",
-            ))
-            if len(out) >= limit:
-                break
-
-        if out:
-            return out, None
-        sample = next((t for t, _ in entries if t), "")
-        diag.append(f"{url}: 0 matched of {len(entries)}, sample={sample[:50]!r}")
-
-    return out, "Bandcamp: " + " | ".join(diag)
+        match = AQUARIUM_TITLE.match(title)
+        if not match:
+            continue
+        artist, album = match.group(1).strip(), match.group(2).strip()
+        if not artist or not album:
+            continue
+        out.append(Candidate(
+            artist=artist,
+            title="",
+            album=album,
+            source="aquarium",
+            source_label="Aquarium Drunkard",
+            source_url=link,
+            context="Aquarium Drunkard 推荐",
+            score=4.0,
+            kind="album",
+        ))
+    return out, (None if out else "Aquarium: 0 matched")
 
 
 # ---------------------------------------------------------------------------
 # Aggregation
 # ---------------------------------------------------------------------------
-
-PROBE_URLS = (
-    "https://aquariumdrunkard.com/feed/",
-    "https://www.gorillavsbear.net/feed/",
-    "https://thequietus.com/feed",
-    "https://www.stereogum.com/feed/",
-    "https://www.brooklynvegan.com/feed/",
-    "https://daily.bandcamp.com/feed",
-    "https://www.allmusic.com/newreleases",
-)
-
-
-def probe_sources():
-    """Temporary diagnostic: report which candidate feeds are reachable."""
-    notes = []
-    for url in PROBE_URLS:
-        try:
-            raw = http_get(url, referer="https://www.google.com/")
-            head = raw[:30].decode("utf-8", "replace").replace("\n", " ")
-            notes.append(f"{url.split('/')[2]}: {len(raw)}B {head!r}")
-        except Exception as exc:  # noqa: BLE001
-            notes.append(f"{url.split('/')[2]}: {str(exc)[:40]}")
-    return [], "PROBE " + " || ".join(notes)
-
 
 def fetch_all():
     candidates: list[Candidate] = []
@@ -481,8 +414,8 @@ def fetch_all():
     stats: dict[str, int] = {}
 
     for name, fetcher in (("kexp", fetch_kexp), ("pitchfork", fetch_pitchfork),
-                          ("allmusic", fetch_allmusic), ("bandcamp", fetch_bandcamp),
-                          ("radioparadise", fetch_radioparadise), ("probe", probe_sources)):
+                          ("allmusic", fetch_allmusic), ("aquarium", fetch_aquarium),
+                          ("radioparadise", fetch_radioparadise)):
         items, err = fetcher()
         stats[name] = len(items)
         candidates.extend(items)
