@@ -538,6 +538,22 @@
       }, 300);
     };
 
+    const back = () => {
+      if (animating) return;
+      animating = true;
+      front = (front - 1 + cards.length) % cards.length;
+      const card = cards[front];
+      cards.forEach((c, i) => {
+        c.classList.toggle("is-front", i === front);
+        c.classList.toggle("is-back", i !== front);
+        c.classList.remove("leaving");
+      });
+      card.classList.add("entering");
+      void card.offsetWidth;
+      requestAnimationFrame(() => card.classList.remove("entering"));
+      setTimeout(() => { animating = false; }, 440);
+    };
+
     root.addEventListener("pointerdown", (ev) => {
       if (ev.target.closest("a")) return;
       startX = ev.clientX;
@@ -552,6 +568,11 @@
       const card = ev.target.closest(".deck-card");
       if (card && card.classList.contains("is-back")) swap();
     });
+    root.addEventListener("wheel", (ev) => {
+      if (Math.abs(ev.deltaY) < 4) return;
+      ev.preventDefault();
+      if (ev.deltaY > 0) swap(); else back();
+    }, { passive: false });
 
     render();
   }
