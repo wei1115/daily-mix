@@ -15,6 +15,7 @@ Output (site/):
 from __future__ import annotations
 
 import base64
+import hashlib
 import json
 import os
 import shutil
@@ -31,6 +32,18 @@ SITE = os.path.join(BASE, "site")
 DATA = os.path.join(SITE, "data")
 ASSETS = os.path.join(SITE, "assets")
 REGENERATE_URL = os.environ.get("REGENERATE_URL", "")
+
+
+def _asset_version() -> str:
+    path = os.path.join(BASE, "web", "style.css")
+    try:
+        with open(path, "rb") as fh:
+            return hashlib.md5(fh.read()).hexdigest()[:8]
+    except OSError:
+        return "1"
+
+
+ASSET_V = _asset_version()
 
 SOURCE_NAMES = {
     "kexp": "KEXP",
@@ -150,8 +163,9 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>{day} · Soulboy</title>
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v={ASSET_V}">
 <style>
   /* 静态页没有悬停态，操作按钮常显 */
   .row-actions{{opacity:1;transform:none}}
@@ -207,8 +221,10 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
             <div><dt>艺人</dt><dd id="dtArtist">{escape(hero.get("artist", "") or "未知")}</dd></div>
             <div><dt>专辑</dt><dd id="dtAlbum">{escape(hero.get("album", "") or "未知")}</dd></div>
           </dl>
-          <p class="card-label review-label">收录网站乐评</p>
-          <p id="dtReview" class="review-text">{escape(hero.get("excerpt_zh") or hero.get("excerpt") or "这个来源没有文字乐评（电台类来源只提供曲目信息）。")}</p>
+          <div id="reviewBlock"{'' if (hero.get("excerpt_zh") or hero.get("excerpt")) else ' style="display:none"'}>
+            <p class="card-label review-label">收录网站乐评</p>
+            <p id="dtReview" class="review-text">{escape(hero.get("excerpt_zh") or hero.get("excerpt") or "")}</p>
+          </div>
         </div>
       </div>
 
@@ -242,7 +258,8 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
     year: document.getElementById('dtYear'),
     dtArtist: document.getElementById('dtArtist'),
     dtAlbum: document.getElementById('dtAlbum'),
-    review: document.getElementById('dtReview')
+    review: document.getElementById('dtReview'),
+    reviewBlock: document.getElementById('reviewBlock')
   }};
   function select(row) {{
     rows.forEach(function (r) {{ r.classList.remove('selected'); }});
@@ -282,8 +299,9 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
     pick.year.textContent = row.dataset.year || '未知';
     pick.dtArtist.textContent = row.dataset.artist || '未知';
     pick.dtAlbum.textContent = row.dataset.album || '未知';
-    pick.review.textContent = row.dataset.review
-      || '这个来源没有文字乐评（电台类来源只提供曲目信息）。';
+    var reviewText = row.dataset.review || '';
+    pick.review.textContent = reviewText;
+    pick.reviewBlock.style.display = reviewText ? 'block' : 'none';
   }}
   rows.forEach(function (row) {{
     row.addEventListener('click', function (ev) {{
