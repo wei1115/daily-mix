@@ -13,7 +13,6 @@
   const SOURCE_NAMES = {
     kexp: "KEXP",
     pitchfork: "Pitchfork",
-    allmusic: "AllMusic",
     aquarium: "Aquarium Drunkard",
     quietus: "The Quietus",
     radioparadise: "Radio Paradise",
