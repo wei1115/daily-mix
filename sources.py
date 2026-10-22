@@ -14,7 +14,6 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
-import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 
@@ -359,18 +358,29 @@ BANDCAMP_SKIP = (
 BANDCAMP_TITLE = re.compile(r"^(.{2,90}?),\s*[“”\"‘’'](.{2,120}?)[“”\"‘’']\s*$")
 
 
+def _bandcamp_entries(raw: bytes):
+    """Feed is occasionally malformed; use a tolerant regex scan instead of XML."""
+    text = raw.decode("utf-8", "replace")
+    for chunk in re.findall(r"<item\b[^>]*>(.*?)</item>", text, re.S | re.I):
+        title_m = re.search(r"<title>(.*?)</title>", chunk, re.S | re.I)
+        title = title_m.group(1) if title_m else ""
+        title = re.sub(r"^\s*<!\[CDATA\[(.*?)\]\]>\s*$", r"\1", title, flags=re.S)
+        link_m = re.search(r"<link>(.*?)</link>", chunk, re.S | re.I)
+        link = (link_m.group(1) if link_m else "").strip()
+        yield _clean(title), link
+
+
 def fetch_bandcamp(limit: int = 8):
     out: list[Candidate] = []
     try:
         raw = http_get("https://daily.bandcamp.com/feed",
                        referer="https://daily.bandcamp.com/")
-        root = ET.fromstring(raw)
     except Exception as exc:  # noqa: BLE001
         return out, f"Bandcamp: {exc}"
 
-    for item in root.findall(".//item")[:limit * 3]:
-        title = _clean(item.findtext("title") or "")
-        link = (item.findtext("link") or "").strip()
+    for title, link in _bandcamp_entries(raw):
+        if len(out) >= limit:
+            break
         if not title or not link:
             continue
         if any(word in title.lower() for word in BANDCAMP_SKIP):
