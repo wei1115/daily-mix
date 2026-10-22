@@ -285,67 +285,6 @@ def fetch_pitchfork(limit: int = 8):
 
 
 # ---------------------------------------------------------------------------
-# AllMusic — editor-selected weekly new releases (JSON-LD CollectionPage)
-# ---------------------------------------------------------------------------
-
-ALLMUSIC_HEADERS = {
-    "Accept": ("text/html,application/xhtml+xml,application/xml;q=0.9,"
-               "image/avif,image/webp,*/*;q=0.8"),
-    "Accept-Encoding": "identity",
-    "Sec-Fetch-Dest": "document",
-    "Sec-Fetch-Mode": "navigate",
-    "Sec-Fetch-Site": "none",
-    "Upgrade-Insecure-Requests": "1",
-}
-
-
-def fetch_allmusic(limit: int = 10):
-    out: list[Candidate] = []
-    try:
-        page = http_get("https://www.allmusic.com/newreleases",
-                        referer="https://www.allmusic.com/",
-                        headers=ALLMUSIC_HEADERS).decode("utf-8", "replace")
-    except Exception as exc:  # noqa: BLE001
-        return out, f"AllMusic: {exc}"
-
-    for block in re.findall(r'<script type="application/ld\+json">(.*?)</script>', page, re.S):
-        try:
-            data = json.loads(block)
-        except json.JSONDecodeError:
-            continue
-        items = data.get("hasPart") if isinstance(data, dict) else None
-        if not items:
-            continue
-        for it in items[:limit]:
-            name = _clean(str(it.get("name") or ""))
-            by_artist = it.get("byArtist")
-            if isinstance(by_artist, list):
-                artist = _clean(", ".join(
-                    str((a or {}).get("name") or "") for a in by_artist if isinstance(a, dict)))
-            elif isinstance(by_artist, dict):
-                artist = _clean(str(by_artist.get("name") or ""))
-            else:
-                artist = ""
-            url = str(it.get("url") or "")
-            if not name or not artist:
-                continue
-            out.append(Candidate(
-                artist=artist,
-                title="",
-                album=name,
-                source="allmusic",
-                source_label="AllMusic",
-                source_url=url,
-                context="AllMusic 本周精选新碟",
-                artwork=_clean(str(it.get("image") or "")),
-                score=4.0,
-                kind="album",
-            ))
-        break
-    return out, None
-
-
-# ---------------------------------------------------------------------------
 # Aquarium Drunkard — editorial album picks titled "Artist :: Album"
 # ---------------------------------------------------------------------------
 
@@ -471,8 +410,7 @@ def fetch_all():
     stats: dict[str, int] = {}
 
     for name, fetcher in (("kexp", fetch_kexp), ("pitchfork", fetch_pitchfork),
-                          ("allmusic", fetch_allmusic), ("aquarium", fetch_aquarium),
-                          ("quietus", fetch_quietus),
+                          ("aquarium", fetch_aquarium), ("quietus", fetch_quietus),
                           ("radioparadise", fetch_radioparadise)):
         items, err = fetcher()
         stats[name] = len(items)
