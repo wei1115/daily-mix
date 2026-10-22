@@ -17,7 +17,7 @@ MAX_ATTEMPTS = 110
 SOURCE_CAPS = {"kexp": 12, "pitchfork": 5, "allmusic": 5, "radioparadise": 5}
 GENRE_CAP = 4
 LOOKBACK_DAYS = 14
-ALBUM_LOOKBACK_DAYS = 2
+ALBUM_LOOKBACK_DAYS = 0
 ALBUM_SOURCES = {"pitchfork", "allmusic"}
 _build_lock = threading.Lock()
 
@@ -100,7 +100,7 @@ def build(progress=None, force: bool = False, day: str | None = None) -> dict:
             if not last:
                 return False
             window = ALBUM_LOOKBACK_DAYS if cand.source in ALBUM_SOURCES else LOOKBACK_DAYS
-            return last >= (today - timedelta(days=window)).isoformat()
+            return last > (today - timedelta(days=window)).isoformat()
 
         selected: list[sources.Candidate] = []
         artist_seen: set[str] = set()
