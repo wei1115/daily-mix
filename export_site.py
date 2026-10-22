@@ -19,7 +19,6 @@ import json
 import os
 import shutil
 import sys
-from datetime import date
 from html import escape
 
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -27,7 +26,6 @@ if BASE not in sys.path:
     sys.path.insert(0, BASE)
 
 import builder  # noqa: E402
-import store    # noqa: E402
 
 SITE = os.path.join(BASE, "site")
 DATA = os.path.join(SITE, "data")
