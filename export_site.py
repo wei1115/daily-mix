@@ -86,10 +86,17 @@ def track_row(index: int, track: dict) -> str:
     album = f'<span class="dot">·</span>{escape(track.get("album", ""))}' if track.get("album") else ""
     source_name = SOURCE_NAMES.get(track.get("source", ""), track.get("source", ""))
     selected = " selected" if index == 1 else ""
+    review = track.get("excerpt_zh") or ""
+    if not review and track.get("excerpt"):
+        review = track["excerpt"]
     data = (f'data-artist="{escape(track.get("artist", ""))}" '
             f'data-album="{escape(track.get("album", ""))}" '
             f'data-context="{escape(track.get("context", ""))}" '
             f'data-artwork="{escape(art)}" '
+            f'data-genre="{escape(track.get("genre", ""))}" '
+            f'data-year="{escape(track.get("year", ""))}" '
+            f'data-review="{escape(review)}" '
+            f'data-has-excerpt="{"1" if track.get("excerpt") else ""}" '
             f'data-orpheus="{escape(orpheus_url(sid)) if sid else ""}" '
             f'data-web="{escape(track.get("netease_url", ""))}" '
             f'data-source-url="{escape(track.get("source_url", ""))}" '
@@ -191,6 +198,19 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
         <a class="source-link" id="pickSource" href="{escape(hero.get("source_url", "#"))}" target="_blank" rel="noopener">→ 查看原文</a>
       </div>
 
+      <div class="card detail-card">
+        <p class="card-label">曲目信息</p>
+        <dl class="facts">
+          <div><dt>风格</dt><dd id="dtGenre">{escape(hero.get("genre", "") or "未知")}</dd></div>
+          <div><dt>年代</dt><dd id="dtYear">{escape(hero.get("year", "") or "未知")}</dd></div>
+          <div><dt>艺人</dt><dd id="dtArtist">{escape(hero.get("artist", "") or "未知")}</dd></div>
+          <div><dt>专辑</dt><dd id="dtAlbum">{escape(hero.get("album", "") or "未知")}</dd></div>
+        </dl>
+        <p class="card-label review-label">收录网站乐评</p>
+        <p id="dtReview" class="review-text">{escape(hero.get("excerpt_zh") or hero.get("excerpt") or "这个来源没有文字乐评（电台类来源只提供曲目信息）。")}</p>
+        <p id="dtReviewSource" class="hint">{("机翻自 " + SOURCE_NAMES.get(hero.get("source", ""), "") + " 原文，仅供参考") if hero.get("excerpt") else ""}</p>
+      </div>
+
       <div class="card">
         <p class="card-label">今日来源</p>
         <ul class="source-list"><li class="head"><span>来源</span><span class="n">已选/候选</span></li>{source_rows}</ul>
@@ -216,7 +236,13 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
     context: document.getElementById('pickContext'),
     netease: document.getElementById('pickNetease'),
     web: document.getElementById('pickWeb'),
-    source: document.getElementById('pickSource')
+    source: document.getElementById('pickSource'),
+    genre: document.getElementById('dtGenre'),
+    year: document.getElementById('dtYear'),
+    dtArtist: document.getElementById('dtArtist'),
+    dtAlbum: document.getElementById('dtAlbum'),
+    review: document.getElementById('dtReview'),
+    reviewSource: document.getElementById('dtReviewSource')
   }};
   function select(row) {{
     rows.forEach(function (r) {{ r.classList.remove('selected'); }});
@@ -251,6 +277,16 @@ def render_page(day: str, payload: dict, days: list[str]) -> str:
     pick.source.textContent = row.dataset.sourceName
       ? '→ 查看 ' + row.dataset.sourceName + ' 原文'
       : '→ 查看原文';
+
+    pick.genre.textContent = row.dataset.genre || '未知';
+    pick.year.textContent = row.dataset.year || '未知';
+    pick.dtArtist.textContent = row.dataset.artist || '未知';
+    pick.dtAlbum.textContent = row.dataset.album || '未知';
+    pick.review.textContent = row.dataset.review
+      || '这个来源没有文字乐评（电台类来源只提供曲目信息）。';
+    pick.reviewSource.textContent = row.dataset.hasExcerpt
+      ? '机翻自 ' + (row.dataset.sourceName || '') + ' 原文，仅供参考'
+      : '';
   }}
   rows.forEach(function (row) {{
     row.addEventListener('click', function (ev) {{
